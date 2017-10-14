@@ -4,26 +4,38 @@ import { connect } from 'react-redux';
 import { setUsername } from '../actions/index';
 
 interface HelloProps {
-    username: string;
     dispatch: Dispatch<{}>;
 }
 
-class Hello extends React.Component<HelloProps>  {
+interface HelloState {
+    username: string;
+}
 
-    onUsernameChange(e: any){
-        this.props.dispatch(setUsername(e.target.value))
+class Hello extends React.Component<HelloProps, HelloState>  {
+
+    constructor(props: HelloProps) {
+        super(props);
+        this.state = { username: '' };
+    }
+
+    onUsernameChange(e: any) {
+        this.setState({ username: e.target.value });
+    }
+
+    onShowClick() {
+        localStorage.setItem('duolingoUsername', this.state.username);
+        this.props.dispatch(setUsername(this.state.username));
     }
 
     render() {
 
         return (
-            <input value={this.props.username} onChange={e => this.onUsernameChange(e)} />
+            <div>
+                <input value={this.state.username} onChange={e => this.onUsernameChange(e)} />
+                <button onClick={e => this.onShowClick()}>Show Stats</button>
+            </div>
         );
     }
 }
 
-const mapStateToProps = (state: any) => ({
-    username: state.username
-});
-
-export default connect(mapStateToProps)(Hello);
+export default connect()(Hello);

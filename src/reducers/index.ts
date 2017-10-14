@@ -9,10 +9,10 @@ const username = (state = '', action: ActionTypes) => {
         default:
             return state;
     }
-}
+};
 
 const rootReducer = combineReducers({
     username
-})
+});
 
 export default rootReducer;
