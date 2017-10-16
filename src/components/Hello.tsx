@@ -1,10 +1,7 @@
 import * as React from 'react';
-import { Dispatch } from 'redux';
-import { connect } from 'react-redux';
-import { setUsername } from '../actions/index';
 
 interface HelloProps {
-    dispatch: Dispatch<{}>;
+    setUsername: (username: string) => void;
 }
 
 interface HelloState {
@@ -18,17 +15,16 @@ class Hello extends React.Component<HelloProps, HelloState>  {
         this.state = { username: '' };
     }
 
+    // tslint:disable-next-line no-any
     onUsernameChange(e: any) {
         this.setState({ username: e.target.value });
     }
 
     onShowClick() {
-        localStorage.setItem('duolingoUsername', this.state.username);
-        this.props.dispatch(setUsername(this.state.username));
+        this.props.setUsername(this.state.username);
     }
 
     render() {
-
         return (
             <div>
                 <input value={this.state.username} onChange={e => this.onUsernameChange(e)} />
@@ -38,4 +34,4 @@ class Hello extends React.Component<HelloProps, HelloState>  {
     }
 }
 
-export default connect()(Hello);
+export default Hello;
