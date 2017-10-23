@@ -1,3 +1,3 @@
 export default interface DuoStatsStore {
-    username: string;
+    myUsername: string;
 }

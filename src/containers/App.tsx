@@ -6,17 +6,17 @@ import './App.css';
 import Hello from '../components/Hello';
 import Stats from './Stats';
 import DuoStatsStore from '../store/DuoStatsStore';
-import { setUsername, SetUsernameAction } from '../actions';
+import { setMyUsername, SetMyUsernameAction } from '../actions';
 
 interface AppProps extends RouteComponentProps<AppProps> {
-  username: string;
-  setUsername: (username: string) => SetUsernameAction;
+  myUsername: string;
+  setMyUsername: (username: string) => SetMyUsernameAction;
 }
 
 class App extends React.Component<AppProps> {
 
   redirectIfRequired() {
-    const redirectTo = this.props.username ? '/stats' : '/hello';
+    const redirectTo = this.props.myUsername ? '/stats' : '/hello';
     if (this.props.location.pathname !== redirectTo) {
       return <Redirect to={redirectTo} />;
     }
@@ -30,7 +30,7 @@ class App extends React.Component<AppProps> {
         <h1>Duo Stats</h1>
         <div className="App">
           {this.redirectIfRequired()}
-          <Route path="/hello" component={() => <Hello setUsername={this.props.setUsername} />} />
+          <Route path="/hello" component={() => <Hello setMyUsername={this.props.setMyUsername} />} />
           <Route path="/stats" component={Stats} />
         </div>
       </div>
@@ -39,7 +39,7 @@ class App extends React.Component<AppProps> {
 }
 
 const mapStateToProps = (state: DuoStatsStore) => {
-  return { username: state.username };
+  return { myUsername: state.myUsername };
 };
 
-export default withRouter<{}>(connect(mapStateToProps, {setUsername})(App));
+export default withRouter<{}>(connect(mapStateToProps, {setMyUsername})(App));

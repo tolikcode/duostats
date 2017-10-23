@@ -2,9 +2,9 @@ import { combineReducers } from 'redux';
 import { ActionTypes } from '../actions/index';
 import { ActionKeys } from '../constants/ActionKeys';
 
-const username = (state = '', action: ActionTypes) => {
+const myUsername = (state = '', action: ActionTypes) => {
     switch (action.type) {
-        case ActionKeys.SET_USERNAME:
+        case ActionKeys.SET_MY_USERNAME:
             return action.username;
         default:
             return state;
@@ -12,7 +12,7 @@ const username = (state = '', action: ActionTypes) => {
 };
 
 const rootReducer = combineReducers({
-    username
+    myUsername
 });
 
 export default rootReducer;

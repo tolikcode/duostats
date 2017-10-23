@@ -1,3 +1,3 @@
 export enum ActionKeys {
-    SET_USERNAME = 'SET_USERNAME',
+    SET_MY_USERNAME = 'SET_MY_USERNAME',
 }

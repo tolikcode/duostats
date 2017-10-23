@@ -1,11 +1,11 @@
 import { ActionKeys } from '../constants/ActionKeys';
 
-export type ActionTypes = SetUsernameAction;
+export type ActionTypes = SetMyUsernameAction;
 
-export interface SetUsernameAction {
-    type: ActionKeys.SET_USERNAME;
+export interface SetMyUsernameAction {
+    type: ActionKeys.SET_MY_USERNAME;
     username: string;
 }
 
-export const setUsername = (username: string): SetUsernameAction =>
-    ({ type: ActionKeys.SET_USERNAME, username });
+export const setMyUsername = (username: string): SetMyUsernameAction =>
+    ({ type: ActionKeys.SET_MY_USERNAME, username });

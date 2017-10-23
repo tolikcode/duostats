@@ -16,7 +16,7 @@ class Stats extends React.Component<StatsProps> {
 }
 
 const mapStateToProps = (state: DuoStatsStore) => {
-    return { username: state.username };
+    return { username: state.myUsername };
 };
 
 export default connect(mapStateToProps)(Stats);

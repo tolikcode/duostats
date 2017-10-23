@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 interface HelloProps {
-    setUsername: (username: string) => void;
+    setMyUsername: (username: string) => void;
 }
 
 interface HelloState {
@@ -21,7 +21,7 @@ class Hello extends React.Component<HelloProps, HelloState>  {
     }
 
     onShowClick() {
-        this.props.setUsername(this.state.username);
+        this.props.setMyUsername(this.state.username);
     }
 
     render() {

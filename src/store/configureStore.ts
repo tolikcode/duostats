@@ -13,7 +13,7 @@ const configureStore = (): Store<DuoStatsStore> => {
       composeEnhancers(applyMiddleware(thunk), autoRehydrate())
     );
 
-    persistStore(store, {whitelist: ['username'], debounce: 1000});
+    persistStore(store, {whitelist: ['myUsername'], debounce: 1000});
 
     return store;
 };
