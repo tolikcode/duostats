@@ -6,7 +6,7 @@ import './App.css';
 import Hello from '../components/Hello';
 import Stats from './Stats';
 import DuoStatsStore from '../store/DuoStatsStore';
-import { setMyUsername, SetMyUsernameAction } from '../actions';
+import { setMyUsername, SetMyUsernameAction } from '../actions/setMyUsername';
 
 interface AppProps extends RouteComponentProps<AppProps> {
   myUsername: string;

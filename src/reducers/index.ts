@@ -1,18 +1,10 @@
 import { combineReducers } from 'redux';
-import { ActionTypes } from '../actions/index';
-import { ActionKeys } from '../constants/ActionKeys';
-
-const myUsername = (state = '', action: ActionTypes) => {
-    switch (action.type) {
-        case ActionKeys.SET_MY_USERNAME:
-            return action.username;
-        default:
-            return state;
-    }
-};
+import myUsername from './myUsername';
+import usersData from './usersData';
 
 const rootReducer = combineReducers({
-    myUsername
+    myUsername,
+    usersData
 });
 
 export default rootReducer;

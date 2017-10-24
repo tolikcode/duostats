@@ -1,3 +1,5 @@
 export enum ActionKeys {
     SET_MY_USERNAME = 'SET_MY_USERNAME',
+    REQUEST_USER = 'REQUEST_USER',
+    RECEIVE_USER = 'RECEIVE_USER'
 }
