@@ -1,0 +1,16 @@
+.helloCard {
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin: 2em 0em
+} 
+
+.helloCard > h3,
+.helloCard > button {
+  margin: 2em;
+}
+
+.helloCard > div {
+  margin: 0em 2em;
+}

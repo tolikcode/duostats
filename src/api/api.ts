@@ -1,6 +1,6 @@
 import UserResponse from './UserResponse';
 
-const corsAnywhereUrl = 'https://cors-anywhere.herokuapp.com/';
+const corsAnywhereUrl = 'https://duostats-cors.herokuapp.com/';
 
 export const getUser = (username: string): Promise<UserResponse> => {
     return fetch(corsAnywhereUrl + `https://duolingo.com/users/${username}`)
