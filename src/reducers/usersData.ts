@@ -1,6 +1,6 @@
 import { ActionTypes } from '../actions/ActionTypes';
 import { ActionKeys } from '../constants/ActionKeys';
-import UserData from '../store/UserData';
+import UserData from '../interfaces/UserData';
 
 const usersData = (state: UserData[] = [], action: ActionTypes) => {
     switch (action.type) {

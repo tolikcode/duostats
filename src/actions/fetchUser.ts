@@ -1,5 +1,5 @@
 import { ActionKeys } from '../constants/ActionKeys';
-import UserResponse from '../api/UserResponse';
+import UserResponse from '../interfaces/api/UserResponse';
 import { Dispatch } from 'redux';
 import { ActionTypes } from './ActionTypes';
 import { getUser } from '../api/api';

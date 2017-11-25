@@ -1,4 +1,4 @@
-import UserResponse from '../api/UserResponse';
+import UserResponse from './api/UserResponse';
 
 export default interface UserData {
     isFetching: boolean;

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import DuoStatsStore from '../../store/DuoStatsStore';
+import DuoStatsStore from '../../interfaces/DuoStatsStore';
 import { Dispatch } from 'redux';
 import { fetchUser } from '../../actions/fetchUser';
-import UserData from '../../store/UserData';
-import LanguageData from '../../api/LanguageData';
-import LearningInterval from '../../model/LearningInterval';
+import UserData from '../../interfaces/UserData';
+import LanguageData from '../../interfaces/api/LanguageData';
+import LearningInterval from '../../interfaces/LearningInterval';
 import LearningChart from '../../components/LearningChart/LearningChart';
 
 import * as dateMin from 'date-fns/min';
