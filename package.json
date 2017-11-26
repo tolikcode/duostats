@@ -2,11 +2,13 @@
   "name": "duostats",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://tolikcode.github.io/duostats",
   "dependencies": {
     "@types/react-redux": "^5.0.10",
     "@types/react-router-dom": "^4.0.8",
     "@types/recharts": "^1.0.6",
     "date-fns": "^1.29.0",
+    "gh-pages": "^1.1.0",
     "material-ui": "^1.0.0-beta.19",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
@@ -19,6 +21,8 @@
     "redux-thunk": "^2.2.0"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
