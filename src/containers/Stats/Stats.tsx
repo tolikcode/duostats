@@ -12,6 +12,10 @@ import * as dateMin from 'date-fns/min';
 import * as dateParse from 'date-fns/parse';
 import * as getYear from 'date-fns/get_iso_year';
 import * as getWeek from 'date-fns/get_iso_week';
+import * as getMonth from 'date-fns/get_month';
+import * as format from 'date-fns/format';
+import * as addWeeks from 'date-fns/add_weeks';
+import * as addMonths from 'date-fns/add_months';
 
 interface StatsProps {
     username: string;
@@ -19,45 +23,36 @@ interface StatsProps {
     dispatch: Dispatch<{}>;
 }
 
-class Stats extends React.Component<StatsProps> {
+interface StatsState {
+    chartData: LearningInterval[];
+}
 
+class Stats extends React.Component<StatsProps, StatsState> {
     componentDidMount() {
         if (this.props.username) {
             this.props.dispatch(fetchUser(this.props.username));
         }
+
+        this.prepareData(this.props, addWeeks, getWeek);
     }
 
-    initWeeklyData(startDate: Date): LearningInterval[] {
-        const chartData: LearningInterval[] = [];
-
-        let year = getYear(startDate);
-        let week = getWeek(startDate);
-        const currentYear = getYear(new Date());
-        const currentWeek = getWeek(new Date());
-
-        while (year <= currentYear && week <= currentWeek) {
-            chartData.push({ year, intervalNumber: week, wordCount: 0 });
-            if (week >= 52) { // TODO: handle cases with 53 ISO weeks in a year
-                year++;
-                week = 1;
-            } else {
-                week++;
-            }
-        }
-
-        return chartData;
+    componentWillReceiveProps(nextProps: StatsProps) {
+        this.prepareData(nextProps, addWeeks, getWeek);
     }
 
-    render() {
-        const user = this.props.usersData.find(u => u.username === this.props.username);
+    prepareData(
+        props: StatsProps,
+        incrementInterval: (date: Date, count: number) => Date,
+        getIntervalNumber: (date: Date) => number): void {
 
+        const user = props.usersData.find(u => u.username === props.username);
         if (user === undefined || user.data === undefined) {
-            return null;
+            return;
         }
 
         // TODO: this should also include NOT YET mastered skills in progress
         const langData = user.data.language_data;
-        const currentLanguage = langData[Object.keys(langData)[0]] as LanguageData; // TODO: make pretty
+        const currentLanguage = langData[Object.keys(langData)[0]] as LanguageData;
         const masteredSkills = currentLanguage.skills.filter(s => s.mastered);
 
         masteredSkills.forEach(s => {
@@ -72,22 +67,50 @@ class Stats extends React.Component<StatsProps> {
 
         const chartData = masteredSkills.reduce(
             (res, s) => {
-                const interval = res.find(p => p.year === getYear(s.learnedDate) && p.intervalNumber === getWeek(s.learnedDate));
+                const interval = res.find(p => p.year === getYear(s.learnedDate) && p.intervalNumber === getIntervalNumber(s.learnedDate));
 
-                // TODO: make pretty
                 if (interval !== undefined) {
                     interval.wordCount += s.words.length;
                 }
 
                 return res;
-            }, 
-            this.initWeeklyData(startDate));
+            },
+            this.initIntervalData(startDate, incrementInterval, getIntervalNumber));
 
-        // TODO: sort by year also
-        chartData.sort((a, b) => a.intervalNumber - b.intervalNumber);
+        this.setState({chartData});
+    }
+
+    initIntervalData(startDate: Date,
+        incrementInterval: (date: Date, count: number) => Date,
+        getIntervalNumber: (date: Date) => number
+    ): LearningInterval[] {
+        const chartData: LearningInterval[] = [];
+
+        let date = startDate;
+        let year = getYear(startDate);
+        let interval = getIntervalNumber(startDate);
+        const todaysYear = getYear(new Date());
+        const todaysInterval = getIntervalNumber(new Date());
+
+        while (year <= todaysYear && interval <= todaysInterval) {
+            const name = format(date, "MMM 'YY");
+            const nameExists = chartData.some(d => d.name === name);
+
+            chartData.push({ year, intervalNumber: interval, wordCount: 0, name: (nameExists ? undefined : name) });
+            date = incrementInterval(date, 1);
+            year = getYear(date);
+            interval = getIntervalNumber(date);
+        }
+
+        return chartData;
+    }
+
+    render() {
+        if (this.state == null || this.state.chartData == null)
+            return null;
 
         return (
-            <LearningChart data={chartData} />
+            <LearningChart data={this.state.chartData} />
         );
     }
 }

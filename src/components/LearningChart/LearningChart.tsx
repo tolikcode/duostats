@@ -9,14 +9,15 @@ interface LanguageChartProps {
 
 class LearningChart extends React.Component<LanguageChartProps> {
   render() {
+    var ticks = this.props.data.filter(d => d.name !== undefined).map(d => d.name);
+
     return (
       <ResponsiveContainer width="80%" aspect={4.0 / 2.0}>
         <BarChart data={this.props.data}>
-          <XAxis dataKey="intervalNumber" />
+          <XAxis dataKey="name" ticks={ticks} />
           <YAxis />
           <CartesianGrid strokeDasharray="3 3" />
           <Tooltip />
-          <Legend />
           <Bar dataKey="wordCount" barSize={30} fill="#1ea11a" />
         </BarChart>
       </ResponsiveContainer >
