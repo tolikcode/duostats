@@ -106,8 +106,9 @@ class Stats extends React.Component<StatsProps, StatsState> {
     }
 
     render() {
-        if (this.state == null || this.state.chartData == null)
+        if (this.state == null || this.state.chartData == null) {
             return null;
+        }
 
         return (
             <LearningChart data={this.state.chartData} />

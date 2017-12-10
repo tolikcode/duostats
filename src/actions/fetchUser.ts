@@ -12,7 +12,7 @@ export interface RequestUserAction {
 export interface ReceiveUserAction {
     type: ActionKeys.RECEIVE_USER;
     username: string;
-    userData: UserResponse;
+    userData?: UserResponse;
     error: string;
 }
 
@@ -21,7 +21,7 @@ const requestUser = (username: string): RequestUserAction => ({
     username
 });
 
-const receiveUser = (username: string, userData: UserResponse, error: string = ''): ReceiveUserAction => ({
+const receiveUser = (username: string, userData?: UserResponse, error: string = ''): ReceiveUserAction => ({
     type: ActionKeys.RECEIVE_USER,
     username,
     userData,
@@ -32,5 +32,5 @@ export const fetchUser = (username: string) => (dispatch: Dispatch<ActionTypes>)
     dispatch(requestUser(username));
     return getUser(username)
         .then(user => dispatch(receiveUser(username, user)))
-        .catch(err => dispatch(receiveUser(username, {} as UserResponse, err.toString())));
+        .catch(err => dispatch(receiveUser(username, undefined, err.toString())));
 };
