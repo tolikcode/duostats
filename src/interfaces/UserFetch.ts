@@ -1,6 +1,6 @@
 import UserResponse from './api/UserResponse';
 
-export default interface UserData {
+export default interface UserFetch {
     isFetching: boolean;
     username: string;
     data?: UserResponse;

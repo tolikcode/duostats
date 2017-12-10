@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import myUsername from './myUsername';
-import usersData from './usersData';
+import userFetchs from './userFetchs';
 
 const rootReducer = combineReducers({
     myUsername,
-    usersData
+    userFetchs
 });
 
 export default rootReducer;

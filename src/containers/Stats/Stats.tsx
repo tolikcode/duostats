@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import DuoStatsStore from '../../interfaces/DuoStatsStore';
 import { Dispatch } from 'redux';
 import { fetchUser } from '../../actions/fetchUser';
-import UserData from '../../interfaces/UserData';
+import UserFetch from '../../interfaces/UserFetch';
 import LanguageData from '../../interfaces/api/LanguageData';
 import LearningInterval from '../../interfaces/LearningInterval';
 import LearningChart from '../../components/LearningChart/LearningChart';
@@ -19,7 +19,7 @@ import * as addMonths from 'date-fns/add_months';
 
 interface StatsProps {
     username: string;
-    usersData: UserData[];
+    userFetchs: UserFetch[];
     dispatch: Dispatch<{}>;
 }
 
@@ -45,7 +45,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
         incrementInterval: (date: Date, count: number) => Date,
         getIntervalNumber: (date: Date) => number): void {
 
-        const user = props.usersData.find(u => u.username === props.username);
+        const user = props.userFetchs.find(u => u.username === props.username);
         if (user === undefined || user.data === undefined) {
             return;
         }
@@ -117,7 +117,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
 }
 
 const mapStateToProps = (state: DuoStatsStore) => {
-    return { username: state.myUsername, usersData: state.usersData };
+    return { username: state.myUsername, userFetchs: state.userFetchs };
 };
 
 export default connect(mapStateToProps)(Stats);

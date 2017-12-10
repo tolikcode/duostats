@@ -1,8 +1,8 @@
 import { ActionTypes } from '../actions/ActionTypes';
 import { ActionKeys } from '../constants/ActionKeys';
-import UserData from '../interfaces/UserData';
+import UserFetch from '../interfaces/UserFetch';
 
-const usersData = (state: UserData[] = [], action: ActionTypes) => {
+const userFetchs = (state: UserFetch[] = [], action: ActionTypes) => {
     switch (action.type) {
         case ActionKeys.REQUEST_USER:
             {
@@ -26,4 +26,4 @@ const usersData = (state: UserData[] = [], action: ActionTypes) => {
     }
 };
 
-export default usersData;
+export default userFetchs;

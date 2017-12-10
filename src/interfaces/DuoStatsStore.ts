@@ -1,6 +1,6 @@
-import UserData from './UserData';
+import UserFetch from './UserFetch';
 
 export default interface DuoStatsStore {
     myUsername: string;
-    usersData: UserData[];
+    userFetchs: UserFetch[];
 }
