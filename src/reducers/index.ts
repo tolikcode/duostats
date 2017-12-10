@@ -3,8 +3,8 @@ import myUsername from './myUsername';
 import userFetchs from './userFetchs';
 
 const rootReducer = combineReducers({
-    myUsername,
-    userFetchs
+  myUsername,
+  userFetchs
 });
 
 export default rootReducer;

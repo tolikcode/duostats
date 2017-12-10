@@ -17,7 +17,7 @@ const theme = createMuiTheme({
     secondary: grey,
     accent: blue,
     error: red
-  },
+  }
 });
 
 ReactDOM.render(

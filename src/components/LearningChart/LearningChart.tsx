@@ -20,7 +20,7 @@ class LearningChart extends React.Component<LanguageChartProps> {
           <Tooltip />
           <Bar dataKey="wordCount" barSize={30} fill="#1ea11a" />
         </BarChart>
-      </ResponsiveContainer >
+      </ResponsiveContainer>
     );
   }
 }

@@ -3,27 +3,25 @@ import { ActionKeys } from '../constants/ActionKeys';
 import UserFetch from '../interfaces/UserFetch';
 
 const userFetchs = (state: UserFetch[] = [], action: ActionTypes) => {
-    switch (action.type) {
-        case ActionKeys.REQUEST_USER:
-            {
-                const users = state.filter(u => u.username !== action.username);
-                users.push({ isFetching: true, username: action.username });
-                return users;
-            }
-        case ActionKeys.RECEIVE_USER:
-            {
-                const users = state.filter(u => u.username !== action.username);
-                users.push({
-                    isFetching: false,
-                    username: action.username,
-                    data: action.userData,
-                    error: action.error
-                });
-                return users;
-            }
-        default:
-            return state;
+  switch (action.type) {
+    case ActionKeys.REQUEST_USER: {
+      const users = state.filter(u => u.username !== action.username);
+      users.push({ isFetching: true, username: action.username });
+      return users;
     }
+    case ActionKeys.RECEIVE_USER: {
+      const users = state.filter(u => u.username !== action.username);
+      users.push({
+        isFetching: false,
+        username: action.username,
+        data: action.userData,
+        error: action.error
+      });
+      return users;
+    }
+    default:
+      return state;
+  }
 };
 
 export default userFetchs;

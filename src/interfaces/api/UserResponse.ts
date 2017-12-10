@@ -1,4 +1,4 @@
 export default interface UserResponse {
-    avatar: string;
-    language_data: any;
-}
+  avatar: string;
+  language_data: {};
+};

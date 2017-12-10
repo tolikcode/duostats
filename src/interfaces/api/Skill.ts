@@ -5,4 +5,4 @@ export default interface Skill {
   learned_ts: number;
 
   learnedDate: Date;
-}
+};

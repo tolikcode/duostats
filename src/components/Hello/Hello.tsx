@@ -14,8 +14,7 @@ interface HelloState {
   username: string;
 }
 
-class Hello extends React.Component<HelloProps, HelloState>  {
-
+class Hello extends React.Component<HelloProps, HelloState> {
   constructor(props: HelloProps) {
     super(props);
     this.state = { username: '' };
@@ -35,7 +34,9 @@ class Hello extends React.Component<HelloProps, HelloState>  {
       <Card className="helloCard">
         <Typography type="subheading">Hi, what's your Duolingo username?</Typography>
         <TextField label="Username" value={this.state.username} onChange={e => this.onUsernameChange(e)} />
-        <Button color="primary" raised onClick={e => this.onShowClick()}>Show Stats</Button>
+        <Button color="primary" raised onClick={e => this.onShowClick()}>
+          Show Stats
+        </Button>
       </Card>
     );
   }

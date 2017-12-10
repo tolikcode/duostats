@@ -3,4 +3,4 @@ export default interface LearningInterval {
   intervalNumber: number; // week or month number
   wordCount: number;
   name?: string;
-}
+};

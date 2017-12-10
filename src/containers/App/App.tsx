@@ -15,7 +15,6 @@ interface AppProps extends RouteComponentProps<AppProps> {
 }
 
 class App extends React.Component<AppProps> {
-
   redirectIfRequired() {
     const redirectTo = this.props.myUsername ? '/stats' : '/hello';
     if (this.props.location.pathname !== redirectTo) {
