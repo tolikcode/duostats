@@ -1,10 +1,11 @@
 import { combineReducers } from 'redux';
 import myUsername from './myUsername';
-import userFetchs from './userFetchs';
+import { users } from './users';
+import { learningCharts } from './learningCharts';
 
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   myUsername,
-  userFetchs
+  users,
+  learningCharts
 });
 
-export default rootReducer;

@@ -1,6 +1,6 @@
 import Skill from './Skill';
 
-export default interface LanguageData {
+export interface LanguageData {
   language: string;
   language_string: string;
   num_skills_learned: number;

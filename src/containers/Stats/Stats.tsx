@@ -1,120 +1,88 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import DuoStatsStore from '../../interfaces/DuoStatsStore';
+import { DuoStatsStore } from '../../interfaces/DuoStatsStore';
 import { Dispatch } from 'redux';
-import { fetchUser } from '../../actions/fetchUser';
-import UserFetch from '../../interfaces/UserFetch';
-import LanguageData from '../../interfaces/api/LanguageData';
-import LearningInterval from '../../interfaces/LearningInterval';
+import { LanguageData } from '../../interfaces/api/LanguageData';
+import { LearningInterval } from '../../interfaces/LearningInterval';
+import { IntervalOptions } from '../../interfaces/IntervalOptions';
 import LearningChart from '../../components/LearningChart/LearningChart';
+import { RadioGroup, FormControlLabel, Radio } from 'material-ui';
 
-import * as dateMin from 'date-fns/min';
-import * as dateParse from 'date-fns/parse';
-import * as getYear from 'date-fns/get_iso_year';
-import * as getWeek from 'date-fns/get_iso_week';
-import * as getMonth from 'date-fns/get_month';
-import * as format from 'date-fns/format';
-import * as addWeeks from 'date-fns/add_weeks';
-import * as addMonths from 'date-fns/add_months';
+import './Stats.css';
+import { prepareLearningChart } from '../../actions/prepareLearningChart';
+import { LearningChartData } from '../../interfaces/LearningChartData';
 
 interface StatsProps {
-  username: string;
-  userFetchs: UserFetch[];
+  myUsername: string;
+  learningCharts: LearningChartData[];
   dispatch: Dispatch<{}>;
 }
 
 interface StatsState {
-  chartData: LearningInterval[];
+  interval: IntervalOptions;
 }
 
 class Stats extends React.Component<StatsProps, StatsState> {
+  constructor() {
+    super();
+    this.state = { interval: IntervalOptions.Month };
+  }
+
   componentDidMount() {
-    if (this.props.username) {
-      this.props.dispatch(fetchUser(this.props.username));
+    if (this.props.myUsername) {
+      this.props.dispatch(prepareLearningChart(this.props.myUsername, this.state.interval));
     }
-
-    this.prepareData(this.props, addWeeks, getWeek);
   }
 
-  componentWillReceiveProps(nextProps: StatsProps) {
-    this.prepareData(nextProps, addWeeks, getWeek);
-  }
+  handleChange = (event: {}, interval: string) => {
+    const intr = interval === IntervalOptions.Month.toString() ? IntervalOptions.Month : IntervalOptions.Week;
 
-  prepareData(
-    props: StatsProps,
-    incrementInterval: (date: Date, count: number) => Date,
-    getIntervalNumber: (date: Date) => number
-  ): void {
-    const user = props.userFetchs.find(u => u.username === props.username);
-    if (user === undefined || user.data === undefined) {
-      return;
-    }
-
-    // TODO: this should also include NOT YET mastered skills in progress
-    const langData = user.data.language_data;
-    const currentLanguage = langData[Object.keys(langData)[0]] as LanguageData;
-    const masteredSkills = currentLanguage.skills.filter(s => s.mastered);
-
-    masteredSkills.forEach(s => {
-      s.learnedDate = dateParse(s.learned_ts * 1000);
-    });
-
-    const startDate = masteredSkills.reduce((earliestDate, skill) => {
-      return dateMin(earliestDate, skill.learnedDate);
-    }, new Date());
-
-    const chartData = masteredSkills.reduce((res, s) => {
-      const interval = res.find(
-        p => p.year === getYear(s.learnedDate) && p.intervalNumber === getIntervalNumber(s.learnedDate)
-      );
-
-      if (interval !== undefined) {
-        interval.wordCount += s.words.length;
-      }
-
-      return res;
-    }, this.initIntervalData(startDate, incrementInterval, getIntervalNumber));
-
-    this.setState({ chartData });
-  }
-
-  initIntervalData(
-    startDate: Date,
-    incrementInterval: (date: Date, count: number) => Date,
-    getIntervalNumber: (date: Date) => number
-  ): LearningInterval[] {
-    const chartData: LearningInterval[] = [];
-
-    let date = startDate;
-    let year = getYear(startDate);
-    let interval = getIntervalNumber(startDate);
-    const todaysYear = getYear(new Date());
-    const todaysInterval = getIntervalNumber(new Date());
-
-    while (year <= todaysYear && interval <= todaysInterval) {
-      const name = format(date, "MMM 'YY");
-      const nameExists = chartData.some(d => d.name === name);
-
-      chartData.push({ year, intervalNumber: interval, wordCount: 0, name: nameExists ? undefined : name });
-      date = incrementInterval(date, 1);
-      year = getYear(date);
-      interval = getIntervalNumber(date);
-    }
-
-    return chartData;
-  }
+    this.setState({ interval: intr });
+    this.props.dispatch(prepareLearningChart(this.props.myUsername, intr));
+  };
 
   render() {
-    if (this.state == null || this.state.chartData == null) {
+    const chartData = this.props.learningCharts.find(
+      lc => lc.username === this.props.myUsername && lc.interval === this.state.interval
+    );
+
+    if (!chartData) {
       return null;
     }
 
-    return <LearningChart data={this.state.chartData} />;
+    if (chartData.error) {
+      return chartData.error;
+    }
+
+    if (chartData.isLoading) {
+      return 'Loading..';
+    }
+
+    if (!chartData.data) {
+      return null;
+    }
+
+    return (
+      <div>
+        <div className="chart">
+          <LearningChart data={chartData.data} />
+        </div>
+        <RadioGroup
+          style={{ flexDirection: 'row' }}
+          name="intervalOption"
+          value={this.state.interval.toString()}
+          onChange={this.handleChange}
+        >
+          <FormControlLabel value={IntervalOptions.Month.toString()} control={<Radio />} label="monthly" />
+          <FormControlLabel value={IntervalOptions.Week.toString()} control={<Radio />} label="weekly" />
+        </RadioGroup>
+      </div>
+    );
   }
 }
 
 const mapStateToProps = (state: DuoStatsStore) => {
-  return { username: state.myUsername, userFetchs: state.userFetchs };
+  return { myUsername: state.myUsername, learningCharts: state.learningCharts };
 };
 
 export default connect(mapStateToProps)(Stats);

@@ -1,6 +1,8 @@
-import UserFetch from './UserFetch';
+import { LearningChartData } from './LearningChartData';
+import { UserResponse } from './api/UserResponse';
 
-export default interface DuoStatsStore {
+export interface DuoStatsStore {
   myUsername: string;
-  userFetchs: UserFetch[];
-};
+  users: UserResponse[];
+  learningCharts: LearningChartData[];
+}

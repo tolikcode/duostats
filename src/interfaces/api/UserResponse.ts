@@ -1,4 +1,5 @@
-export default interface UserResponse {
+export interface UserResponse {
+  username: string;
   avatar: string;
   language_data: {};
 };

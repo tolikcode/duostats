@@ -1,4 +1,4 @@
-import UserResponse from '../interfaces/api/UserResponse';
+import { UserResponse } from '../interfaces/api/UserResponse';
 
 const corsAnywhereUrl = 'https://duostats-cors.herokuapp.com/';
 

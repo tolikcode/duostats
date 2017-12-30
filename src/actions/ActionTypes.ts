@@ -1,4 +1,9 @@
 import { SetMyUsernameAction } from './setMyUsername';
-import { RequestUserAction, ReceiveUserAction } from './fetchUser';
+import { RequestLearningChartAction, ReceiveLearningChartAction } from './prepareLearningChart';
+import { SaveUserAction } from './saveUser';
 
-export type ActionTypes = SetMyUsernameAction | RequestUserAction | ReceiveUserAction;
+export type ActionTypes =
+  | SetMyUsernameAction
+  | RequestLearningChartAction
+  | ReceiveLearningChartAction
+  | SaveUserAction;

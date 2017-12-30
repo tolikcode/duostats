@@ -1,7 +1,7 @@
 import * as React from 'react';
-import LanguageData from '../../interfaces/api/LanguageData';
+import {LanguageData} from '../../interfaces/api/LanguageData';
 import { BarChart, XAxis, YAxis, Bar, Legend, Tooltip, CartesianGrid, ResponsiveContainer } from 'recharts';
-import LearningInterval from '../../interfaces/LearningInterval';
+import { LearningInterval} from '../../interfaces/LearningInterval';
 
 interface LanguageChartProps {
   data: LearningInterval[];
