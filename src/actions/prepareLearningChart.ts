@@ -114,7 +114,7 @@ function prepareData(
     return dateMin(earliestDate, skill.learnedDate);
   }, new Date());
 
-  const emptyIntervalData = initIntervalData(startDate, incrementInterval, getIntervalNumber);
+  const emptyIntervalData = initIntervalData(startDate, new Date(), incrementInterval, getIntervalNumber);
 
   const chartData = masteredSkills.reduce((res, s) => {
     const interval = res.find(
@@ -133,6 +133,7 @@ function prepareData(
 
 function initIntervalData(
   startDate: Date,
+  endDate: Date,
   incrementInterval: (date: Date, count: number) => Date,
   getIntervalNumber: (date: Date) => number
 ): LearningInterval[] {
@@ -141,10 +142,10 @@ function initIntervalData(
   let date = startDate;
   let year = getYear(startDate);
   let interval = getIntervalNumber(startDate);
-  const todaysYear = getYear(new Date());
-  const todaysInterval = getIntervalNumber(new Date());
+  const endYear = getYear(endDate);
+  const endInterval = getIntervalNumber(endDate);
 
-  while (year <= todaysYear && interval <= todaysInterval) {
+  while (year < endYear || interval <= endInterval) {
     const name = format(date, "MMM 'YY");
     const nameExists = chartData.some(d => d.name === name);
 
