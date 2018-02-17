@@ -122,7 +122,7 @@ function prepareData(
     );
 
     if (interval) {
-      interval.wordCount += s.words.length;
+      interval.words = interval.words.concat(s.words);
     }
 
     return res;
@@ -149,7 +149,12 @@ function initIntervalData(
     const name = format(date, "MMM 'YY");
     const nameExists = chartData.some(d => d.name === name);
 
-    chartData.push({ year, intervalNumber: interval, wordCount: 0, name: nameExists ? undefined : name });
+    chartData.push({
+      year,
+      intervalNumber: interval,
+      words: [],
+      name: nameExists ? undefined : name
+    });
     date = incrementInterval(date, 1);
     year = getYear(date);
     interval = getIntervalNumber(date);
