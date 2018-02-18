@@ -17,7 +17,7 @@ class LearningChart extends React.Component<LanguageChartProps> {
     const ticks = this.props.data.filter(d => d.name !== undefined).map(d => d.name);
 
     return (
-      <ResponsiveContainer width="80%" aspect={4.0 / 2.0}>
+      <ResponsiveContainer aspect={4.0 / 2.0}>
         <BarChart data={this.props.data}>
           <XAxis dataKey="name" ticks={ticks} />
           <YAxis />
