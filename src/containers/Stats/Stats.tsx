@@ -12,6 +12,7 @@ import './Stats.css';
 import { prepareLearningChart } from '../../actions/prepareLearningChart';
 import { LearningChartData } from '../../interfaces/LearningChartData';
 import WordStats from '../../components/WordStats/WordStats';
+import IntervalOptionSelector from '../../components/IntervalOptionSelector/IntervalOptionSelector';
 
 interface StatsProps {
   myUsername: string;
@@ -36,10 +37,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
     }
   }
 
-  onIntervalOptionChanged = (event: {}, interval: string) => {
-    const selectedOption =
-      interval === IntervalOptions.Month.toString() ? IntervalOptions.Month : IntervalOptions.Week;
-
+  onIntervalOptionChanged = (selectedOption: IntervalOptions) => {
     this.setState({ intervalOption: selectedOption, selectedInterval: undefined });
     this.props.dispatch(prepareLearningChart(this.props.myUsername, selectedOption));
   };
@@ -70,15 +68,10 @@ class Stats extends React.Component<StatsProps, StatsState> {
         <div className="chart">
           <LearningChart data={chartData.data} onIntervalSelected={index => this.onIntervalSelected(index)} />
         </div>
-        <RadioGroup
-          style={{ flexDirection: 'row' }}
-          name="intervalOption"
-          value={this.state.intervalOption.toString()}
-          onChange={this.onIntervalOptionChanged}
-        >
-          <FormControlLabel value={IntervalOptions.Month.toString()} control={<Radio />} label="monthly" />
-          <FormControlLabel value={IntervalOptions.Week.toString()} control={<Radio />} label="weekly" />
-        </RadioGroup>
+        <IntervalOptionSelector
+          currentOption={this.state.intervalOption}
+          onOptionChanged={option => this.onIntervalOptionChanged(option)}
+        />
         {this.state.selectedInterval !== undefined && (
           <WordStats {...chartData.data[this.state.selectedInterval]} />
         )}
