@@ -13,7 +13,7 @@ import { prepareLearningChart } from '../../actions/prepareLearningChart';
 import { LearningChartData } from '../../interfaces/LearningChartData';
 import WordStats from '../../components/WordStats/WordStats';
 import IntervalOptionSelector from '../../components/IntervalOptionSelector/IntervalOptionSelector';
-import FreindsList from '../../components/FriendsList/FriendsList';
+import FriendsList from '../../components/FriendsList/FriendsList';
 
 interface StatsProps {
   myUsername: string;
@@ -83,6 +83,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
     }
 
     const selectedInterval = this.getSelectedInterval(chartData.data);
+    const friends = chartData.friends ? chartData.friends : [];
 
     return (
       <Grid container>
@@ -103,7 +104,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
           <Grid item>{selectedInterval !== null && <WordStats {...selectedInterval} />}</Grid>
         </Grid>
         <Grid item xs={12} md={3}>
-          <FreindsList />
+          <FriendsList {...{ friends }} />
         </Grid>
         <Grid item md={1} />
       </Grid>

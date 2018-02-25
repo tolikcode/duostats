@@ -1,10 +1,13 @@
+import { LearningInterval } from './../interfaces/LearningInterval';
+import { Friend } from './../interfaces/Friend';
+import { PointsRankingData } from './../interfaces/api/PointsRankingData';
+import { LearningChartData } from './../interfaces/LearningChartData';
 import { Dispatch } from 'redux';
 import { ActionTypes } from './ActionTypes';
 import { getUser } from '../api/api';
 import { IntervalOptions } from '../interfaces/IntervalOptions';
 import { DuoStatsStore } from '../interfaces/DuoStatsStore';
 import { ActionKeys } from '../constants/ActionKeys';
-import { LearningInterval } from '../interfaces/LearningInterval';
 import { saveUser } from './saveUser';
 import { UserResponse } from '../interfaces/api/UserResponse';
 import { LanguageData } from '../interfaces/api/LanguageData';
@@ -26,10 +29,7 @@ export interface RequestLearningChartAction {
 
 export interface ReceiveLearningChartAction {
   type: ActionKeys.RECEIVE_LEARNING_CHART;
-  username: string;
-  interval: IntervalOptions;
-  data?: LearningInterval[];
-  error?: string;
+  learningChartData: LearningChartData;
 }
 
 const requestLearningChart = (username: string, interval: IntervalOptions): RequestLearningChartAction => ({
@@ -38,17 +38,9 @@ const requestLearningChart = (username: string, interval: IntervalOptions): Requ
   interval
 });
 
-const receiveLearningChart = (
-  username: string,
-  interval: IntervalOptions,
-  data?: LearningInterval[],
-  error?: string
-): ReceiveLearningChartAction => ({
+const receiveLearningChart = (learningChartData: LearningChartData): ReceiveLearningChartAction => ({
   type: ActionKeys.RECEIVE_LEARNING_CHART,
-  username,
-  interval,
-  data,
-  error
+  learningChartData
 });
 
 export const prepareLearningChart = (username: string, interval: IntervalOptions) => (
@@ -59,25 +51,34 @@ export const prepareLearningChart = (username: string, interval: IntervalOptions
     return;
   }
 
-  dispatch(requestLearningChart(username, interval));
+  dispatch(requestLearningChart(username, IntervalOptions.Week));
+  dispatch(requestLearningChart(username, IntervalOptions.Month));
   fetchUser(username, dispatch, getState)
     .then(user => {
-      let data;
-      switch (interval) {
-        case IntervalOptions.Month:
-          data = prepareData(user, addMonths, getMonth);
-          break;
-        case IntervalOptions.Week:
-          data = prepareData(user, addWeeks, getWeek);
-          break;
-        default:
-      }
+      const langData = user.language_data;
+      const currentLanguage = langData[Object.keys(langData)[0]] as LanguageData;
 
-      dispatch(receiveLearningChart(username, interval, data));
+      const monthlyData = prepareData(currentLanguage, addMonths, getMonth);
+      const weeklyData = prepareData(currentLanguage, addWeeks, getWeek);
+
+      const friends: Friend[] = currentLanguage.points_ranking_data.filter(prd => !prd.self).map(rd => ({
+        avatarUrl: rd.avatar,
+        fullname: rd.fullname,
+        username: rd.username
+      }));
+
+      saveData(username, IntervalOptions.Month, monthlyData, friends, dispatch);
+      saveData(username, IntervalOptions.Week, weeklyData, friends, dispatch);
     })
-    .catch(err =>
-      dispatch(receiveLearningChart(username, interval, undefined, `Failed to load user ${username}`))
-    );
+    .catch(err => {
+      const errorChartData: LearningChartData = {
+        isLoading: false,
+        username,
+        interval,
+        error: `Failed to load user ${username}`
+      };
+      dispatch(receiveLearningChart(errorChartData));
+    });
 };
 
 function fetchUser(
@@ -97,13 +98,11 @@ function fetchUser(
 }
 
 function prepareData(
-  user: UserResponse,
+  currentLanguage: LanguageData,
   incrementInterval: (date: Date, count: number) => Date,
   getIntervalNumber: (date: Date) => number
 ): LearningInterval[] {
   // TODO: this should also include NOT YET mastered skills in progress
-  const langData = user.language_data;
-  const currentLanguage = langData[Object.keys(langData)[0]] as LanguageData;
   const masteredSkills = currentLanguage.skills.filter(s => s.mastered);
 
   masteredSkills.forEach(s => {
@@ -161,4 +160,22 @@ function initIntervalData(
   }
 
   return chartData;
+}
+
+function saveData(
+  username: string,
+  interval: IntervalOptions,
+  data: LearningInterval[],
+  friends: Friend[],
+  dispatch: Dispatch<ActionTypes>
+): void {
+  const learningChartData: LearningChartData = {
+    isLoading: false,
+    username,
+    interval,
+    data,
+    friends
+  };
+
+  dispatch(receiveLearningChart(learningChartData));
 }

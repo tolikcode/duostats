@@ -10,14 +10,8 @@ export const learningCharts = (state: LearningChartData[] = [], action: ActionTy
       return charts;
     }
     case ActionKeys.RECEIVE_LEARNING_CHART: {
-      const charts = state.filter(lc => lc.username !== action.username || lc.interval !== action.interval);
-      charts.push({
-        isLoading: false,
-        username: action.username,
-        interval: action.interval,
-        data: action.data,
-        error: action.error
-      });
+      const charts = state.filter(lc => lc.username !== action.learningChartData.username || lc.interval !== action.learningChartData.interval);
+      charts.push(action.learningChartData);
       return charts;
     }
     default:

@@ -1,5 +1,6 @@
 import { IntervalOptions } from "./IntervalOptions";
 import { LearningInterval } from "./LearningInterval";
+import { Friend } from "./Friend";
 
 export interface LearningChartData {
   isLoading: boolean;
@@ -7,4 +8,5 @@ export interface LearningChartData {
   interval: IntervalOptions;
   data?: LearningInterval[];
   error?: string;
+  friends?: Friend[];
 }
