@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
+import * as queryString from 'query-string';
 import { DuoStatsStore } from '../../interfaces/DuoStatsStore';
 import { Dispatch } from 'redux';
 import { LanguageData } from '../../interfaces/api/LanguageData';
@@ -14,8 +15,9 @@ import { LearningChartData } from '../../interfaces/LearningChartData';
 import WordStats from '../../components/WordStats/WordStats';
 import IntervalOptionSelector from '../../components/IntervalOptionSelector/IntervalOptionSelector';
 import FriendsList from '../../components/FriendsList/FriendsList';
+import { RouteComponentProps } from 'react-router';
 
-interface StatsProps {
+interface StatsProps extends RouteComponentProps<{}> {
   myUsername: string;
   learningCharts: LearningChartData[];
   dispatch: Dispatch<{}>;
@@ -33,15 +35,29 @@ class Stats extends React.Component<StatsProps, StatsState> {
   }
 
   componentDidMount() {
-    if (this.props.myUsername) {
-      this.props.dispatch(prepareLearningChart(this.props.myUsername, this.state.intervalOption));
+    this.prepareCharts(this.props);
+  }
+
+  componentWillReceiveProps(nextProps: StatsProps) {
+    this.prepareCharts(nextProps);
+  }
+
+  prepareCharts(props: StatsProps) {
+    const username = this.getCurrentUsername(props);
+    if (username) {
+      this.props.dispatch(prepareLearningChart(username, this.state.intervalOption));
     }
   }
 
-  onIntervalOptionChanged = (selectedOption: IntervalOptions) => {
+  getCurrentUsername(props: StatsProps): string {
+    const queryParams = queryString.parse(props.location.search);
+    return queryParams.username ? queryParams.username : props.myUsername;
+  }
+
+  onIntervalOptionChanged(selectedOption: IntervalOptions) {
     this.setState({ intervalOption: selectedOption, selectedInterval: undefined });
     this.props.dispatch(prepareLearningChart(this.props.myUsername, selectedOption));
-  };
+  }
 
   onIntervalSelected(intervalIndex: number) {
     this.setState({ selectedInterval: intervalIndex });
@@ -52,7 +68,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
       return data[this.state.selectedInterval];
     }
 
-    // TODO: consider lodash
+    // Returns the last interval with words // TODO: consider lodash
     const withWords = data.filter(i => i.words.length > 0);
     if (withWords.length > 0) {
       return withWords[withWords.length - 1];
@@ -61,9 +77,16 @@ class Stats extends React.Component<StatsProps, StatsState> {
     return null;
   }
 
+  onFriendSelected(username: string) {
+    this.setState({ selectedInterval: undefined });
+    this.props.history.push(`/stats?username=${username}`);
+  }
+
   render() {
+    const username = this.getCurrentUsername(this.props);
+
     const chartData = this.props.learningCharts.find(
-      lc => lc.username === this.props.myUsername && lc.interval === this.state.intervalOption
+      lc => lc.username === username && lc.interval === this.state.intervalOption
     );
 
     if (!chartData) {
@@ -104,7 +127,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
           <Grid item>{selectedInterval !== null && <WordStats {...selectedInterval} />}</Grid>
         </Grid>
         <Grid item xs={12} md={3}>
-          <FriendsList {...{ friends }} />
+          <FriendsList friends={friends} onFriendSelected={(un: string) => this.onFriendSelected(un)} />
         </Grid>
         <Grid item md={1} />
       </Grid>
