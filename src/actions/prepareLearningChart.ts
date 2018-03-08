@@ -8,7 +8,6 @@ import { getUser } from '../api/api';
 import { IntervalOptions } from '../interfaces/IntervalOptions';
 import { DuoStatsStore } from '../interfaces/DuoStatsStore';
 import { ActionKeys } from '../constants/ActionKeys';
-import { saveUser } from './saveUser';
 import { UserResponse } from '../interfaces/api/UserResponse';
 import { LanguageData } from '../interfaces/api/LanguageData';
 
@@ -50,7 +49,7 @@ export const prepareLearningChart = (username: string) => (
   }
 
   dispatch(requestLearningChart(username));
-  fetchUser(username, dispatch, getState)
+  getUser(username)
     .then(user => {
       const langData = user.language_data;
       const currentLanguage = langData[Object.keys(langData)[0]] as LanguageData;
@@ -83,22 +82,6 @@ export const prepareLearningChart = (username: string) => (
       dispatch(receiveLearningChart(errorChartData));
     });
 };
-
-function fetchUser(
-  username: string,
-  dispatch: Dispatch<ActionTypes>,
-  getState: () => DuoStatsStore
-): Promise<UserResponse> {
-  const user = getState().users.find(u => u.username === username);
-  if (!user) {
-    return getUser(username).then(u => {
-      dispatch(saveUser(u));
-      return u;
-    });
-  }
-
-  return Promise.resolve(user);
-}
 
 function prepareData(
   currentLanguage: LanguageData,
