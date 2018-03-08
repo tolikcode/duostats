@@ -45,7 +45,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
   prepareCharts(props: StatsProps) {
     const username = this.getCurrentUsername(props);
     if (username) {
-      this.props.dispatch(prepareLearningChart(username, this.state.intervalOption));
+      this.props.dispatch(prepareLearningChart(username));
     }
   }
 
@@ -56,7 +56,6 @@ class Stats extends React.Component<StatsProps, StatsState> {
 
   onIntervalOptionChanged(selectedOption: IntervalOptions) {
     this.setState({ intervalOption: selectedOption, selectedInterval: undefined });
-    this.props.dispatch(prepareLearningChart(this.props.myUsername, selectedOption));
   }
 
   onIntervalSelected(intervalIndex: number) {
@@ -85,9 +84,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
   render() {
     const username = this.getCurrentUsername(this.props);
 
-    const chartData = this.props.learningCharts.find(
-      lc => lc.username === username && lc.interval === this.state.intervalOption
-    );
+    const chartData = this.props.learningCharts.find(lc => lc.username === username);
 
     if (!chartData) {
       return null;
@@ -101,11 +98,14 @@ class Stats extends React.Component<StatsProps, StatsState> {
       return chartData.error;
     }
 
-    if (!chartData.data) {
+    const intervals =
+      this.state.intervalOption === IntervalOptions.Month ? chartData.monthlyData : chartData.weeklyData;
+
+    if (!intervals) {
       return null;
     }
 
-    const selectedInterval = this.getSelectedInterval(chartData.data);
+    const selectedInterval = this.getSelectedInterval(intervals);
     const friends = chartData.friends ? chartData.friends : [];
 
     return (
@@ -113,10 +113,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
         <Grid item md={1} />
         <Grid item xs={12} md={7} container direction="column">
           <Grid item>
-            <LearningChart
-              data={chartData.data}
-              onIntervalSelected={index => this.onIntervalSelected(index)}
-            />
+            <LearningChart data={intervals} onIntervalSelected={index => this.onIntervalSelected(index)} />
           </Grid>
           <Grid item container justify="center">
             <IntervalOptionSelector

@@ -24,7 +24,6 @@ import * as addMonths from 'date-fns/add_months';
 export interface RequestLearningChartAction {
   type: ActionKeys.REQUEST_LEARNING_CHART;
   username: string;
-  interval: IntervalOptions;
 }
 
 export interface ReceiveLearningChartAction {
@@ -32,10 +31,9 @@ export interface ReceiveLearningChartAction {
   learningChartData: LearningChartData;
 }
 
-const requestLearningChart = (username: string, interval: IntervalOptions): RequestLearningChartAction => ({
+const requestLearningChart = (username: string): RequestLearningChartAction => ({
   type: ActionKeys.REQUEST_LEARNING_CHART,
-  username,
-  interval
+  username
 });
 
 const receiveLearningChart = (learningChartData: LearningChartData): ReceiveLearningChartAction => ({
@@ -43,16 +41,15 @@ const receiveLearningChart = (learningChartData: LearningChartData): ReceiveLear
   learningChartData
 });
 
-export const prepareLearningChart = (username: string, interval: IntervalOptions) => (
+export const prepareLearningChart = (username: string) => (
   dispatch: Dispatch<ActionTypes>,
   getState: () => DuoStatsStore
 ) => {
-  if (getState().learningCharts.find(lc => lc.username === username && lc.interval === interval)) {
+  if (getState().learningCharts.find(lc => lc.username === username)) {
     return;
   }
 
-  dispatch(requestLearningChart(username, IntervalOptions.Week));
-  dispatch(requestLearningChart(username, IntervalOptions.Month));
+  dispatch(requestLearningChart(username));
   fetchUser(username, dispatch, getState)
     .then(user => {
       const langData = user.language_data;
@@ -67,14 +64,20 @@ export const prepareLearningChart = (username: string, interval: IntervalOptions
         username: rd.username
       }));
 
-      saveData(username, IntervalOptions.Month, monthlyData, friends, dispatch);
-      saveData(username, IntervalOptions.Week, weeklyData, friends, dispatch);
+      const learningChartData: LearningChartData = {
+        isLoading: false,
+        username,
+        monthlyData,
+        weeklyData,
+        friends
+      };
+
+      dispatch(receiveLearningChart(learningChartData));
     })
     .catch(err => {
       const errorChartData: LearningChartData = {
         isLoading: false,
         username,
-        interval,
         error: `Failed to load user ${username}`
       };
       dispatch(receiveLearningChart(errorChartData));
@@ -160,22 +163,4 @@ function initIntervalData(
   }
 
   return chartData;
-}
-
-function saveData(
-  username: string,
-  interval: IntervalOptions,
-  data: LearningInterval[],
-  friends: Friend[],
-  dispatch: Dispatch<ActionTypes>
-): void {
-  const learningChartData: LearningChartData = {
-    isLoading: false,
-    username,
-    interval,
-    data,
-    friends
-  };
-
-  dispatch(receiveLearningChart(learningChartData));
 }
