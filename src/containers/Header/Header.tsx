@@ -8,7 +8,7 @@ class Header extends React.Component {
     return (
       <AppBar position="static" color="primary">
         <Toolbar>
-          <Typography type="title">Duo Stats</Typography>
+          <Typography variant="title">Duo Stats</Typography>
         </Toolbar>
       </AppBar>
     );

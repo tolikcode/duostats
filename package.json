@@ -5,21 +5,21 @@
   "homepage": "https://tolikcode.github.io/duostats",
   "dependencies": {
     "@types/query-string": "^5.1.0",
-    "@types/react-redux": "^5.0.10",
-    "@types/react-router-dom": "^4.0.8",
-    "@types/recharts": "^1.0.13",
+    "@types/react-redux": "^5.0.15",
+    "@types/react-router-dom": "^4.2.4",
+    "@types/recharts": "^1.0.17",
     "date-fns": "^1.29.0",
     "gh-pages": "^1.1.0",
-    "material-ui": "^1.0.0-beta.19",
+    "material-ui": "^1.0.0-beta.37",
     "query-string": "^5.1.0",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "react-redux": "^5.0.6",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
-    "react-scripts-ts": "2.7.0",
+    "react-scripts-ts": "^2.13.0",
     "recharts": "^1.0.0-beta.10",
     "redux": "^3.7.2",
-    "redux-persist": "^4.10.1",
+    "redux-persist": "^5.9.1",
     "redux-thunk": "^2.2.0"
   },
   "scripts": {
@@ -32,10 +32,11 @@
     "tslint-check": "tslint-config-prettier-check ./tslint.json"
   },
   "devDependencies": {
-    "@types/jest": "^21.1.2",
-    "@types/node": "^8.0.34",
-    "@types/react": "^16.0.10",
-    "@types/react-dom": "^16.0.1",
-    "tslint-config-prettier": "^1.6.0"
+    "@types/jest": "^21.1.10",
+    "@types/node": "^8.9.5",
+    "@types/react": "^16.0.40",
+    "@types/react-dom": "^16.0.4",
+    "tslint-config-prettier": "^1.9.0",
+    "typescript": "^2.7.2"
   }
 }

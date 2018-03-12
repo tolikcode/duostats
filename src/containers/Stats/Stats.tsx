@@ -15,7 +15,7 @@ import { LearningChartData } from '../../interfaces/LearningChartData';
 import WordStats from '../../components/WordStats/WordStats';
 import IntervalOptionSelector from '../../components/IntervalOptionSelector/IntervalOptionSelector';
 import FriendsList from '../../components/FriendsList/FriendsList';
-import { RouteComponentProps } from 'react-router';
+import { RouteComponentProps } from 'react-router-dom';
 
 interface StatsProps extends RouteComponentProps<{}> {
   myUsername: string;
@@ -29,8 +29,8 @@ interface StatsState {
 }
 
 class Stats extends React.Component<StatsProps, StatsState> {
-  constructor() {
-    super();
+  constructor(props: StatsProps) {
+    super(props);
     this.state = { intervalOption: IntervalOptions.Month };
   }
 

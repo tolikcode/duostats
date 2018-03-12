@@ -3,19 +3,19 @@ import * as ReactDOM from 'react-dom';
 import App from './containers/App/App';
 import registerServiceWorker from './registerServiceWorker';
 import './index.css';
-import configureStore from './store/configureStore';
+import { configureStore } from './store/configureStore';
 import { Provider } from 'react-redux';
 import { HashRouter as Router } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
-import { green, red, blue, grey } from 'material-ui/colors';
+import { green, red, lightBlue } from 'material-ui/colors';
+import CssBaseline from 'material-ui/CssBaseline';
 
 const store = configureStore();
 
 const theme = createMuiTheme({
   palette: {
     primary: green,
-    secondary: grey,
-    accent: blue,
+    secondary: lightBlue,
     error: red
   }
 });
@@ -24,6 +24,7 @@ ReactDOM.render(
   <Provider store={store}>
     <Router>
       <MuiThemeProvider theme={theme}>
+        <CssBaseline />
         <App />
       </MuiThemeProvider>
     </Router>

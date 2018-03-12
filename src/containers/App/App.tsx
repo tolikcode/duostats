@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Route, Redirect, withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router';
 import './App.css';
 import Hello from '../../components/Hello/Hello';
 import Stats from '../Stats/Stats';
@@ -42,4 +41,4 @@ const mapStateToProps = (state: DuoStatsStore) => {
   return { myUsername: state.myUsername };
 };
 
-export default withRouter<{}>(connect(mapStateToProps, { setMyUsername })(App));
+export default withRouter<RouteComponentProps<AppProps>>(connect(mapStateToProps, { setMyUsername })(App));
