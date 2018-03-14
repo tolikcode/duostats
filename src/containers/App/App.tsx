@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import './App.css';
 import Hello from '../../components/Hello/Hello';
 import Stats from '../Stats/Stats';
-import Header from '../Header/Header';
+import Header from '../../components/Header/Header';
 import { setMyUsername, SetMyUsernameAction } from '../../actions/setMyUsername';
 import { DuoStatsStore } from '../../interfaces/DuoStatsStore';
 
