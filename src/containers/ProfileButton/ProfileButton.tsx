@@ -8,6 +8,7 @@ import Portal from 'material-ui/Portal/Portal';
 import { DuoStatsStore } from '../../interfaces/DuoStatsStore';
 import { connect } from 'react-redux';
 import { setMyUsername, SetMyUsernameAction } from '../../actions/setMyUsername';
+import DuostatsAvatar from '../../components/DuostatsAvatar/DuostatsAvatar';
 
 interface ProfileButtonProps {
   myUsername: string;
@@ -50,7 +51,7 @@ class ProfileButton extends React.Component<ProfileButtonProps, ProfileButtonSta
             aria-haspopup="true"
             onClick={this.toggleMenu}
           >
-            <Avatar src={this.props.myAvatarUrl + '/medium'} />
+            <DuostatsAvatar src={this.props.myAvatarUrl} size="medium" />
             {this.props.myUsername}
           </Button>
         </Target>

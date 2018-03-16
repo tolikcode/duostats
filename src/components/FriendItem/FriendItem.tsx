@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Friend } from '../../interfaces/Friend';
-import { ListItem, Avatar, ListItemText } from 'material-ui';
+import { ListItem, ListItemText } from 'material-ui';
 import { Link } from 'react-router-dom';
+import DuostatsAvatar from '../DuostatsAvatar/DuostatsAvatar';
 
 interface FriendItemProps {
   friend: Friend;
@@ -11,7 +12,7 @@ interface FriendItemProps {
 const FriendItem = (props: FriendItemProps) => {
   return (
     <ListItem button onClick={() => props.onClick(props.friend.username)}>
-      <Avatar src={props.friend.avatarUrl + '/medium'} />
+      <DuostatsAvatar src={props.friend.avatarUrl} size="medium" />
       <ListItemText primary={props.friend.fullname} />
     </ListItem>
   );
