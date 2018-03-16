@@ -2,14 +2,14 @@ import { LearningInterval } from './../interfaces/LearningInterval';
 import { Friend } from './../interfaces/Friend';
 import { PointsRankingData } from './../interfaces/api/PointsRankingData';
 import { LearningChartData } from './../interfaces/LearningChartData';
-import { Dispatch } from 'redux';
 import { ActionTypes } from './ActionTypes';
-import { getUser } from '../api/api';
 import { IntervalOptions } from '../interfaces/IntervalOptions';
 import { DuoStatsStore } from '../interfaces/DuoStatsStore';
 import { ActionKeys } from '../constants/ActionKeys';
 import { UserResponse } from '../interfaces/api/UserResponse';
 import { LanguageData } from '../interfaces/api/LanguageData';
+import { requestLearningChart } from './requestLearningChart';
+import { receiveLearningChart } from './receiveLearningChart';
 
 import * as dateMin from 'date-fns/min';
 import * as dateParse from 'date-fns/parse';
@@ -20,67 +20,28 @@ import * as format from 'date-fns/format';
 import * as addWeeks from 'date-fns/add_weeks';
 import * as addMonths from 'date-fns/add_months';
 
-export interface RequestLearningChartAction {
-  type: ActionKeys.REQUEST_LEARNING_CHART;
-  username: string;
-}
+export const prepareLearningChart = (user: UserResponse): LearningChartData => {
+  const langData = user.language_data;
+  const currentLanguage = langData[Object.keys(langData)[0]] as LanguageData;
 
-export interface ReceiveLearningChartAction {
-  type: ActionKeys.RECEIVE_LEARNING_CHART;
-  learningChartData: LearningChartData;
-}
+  const monthlyData = prepareData(currentLanguage, addMonths, getMonth);
+  const weeklyData = prepareData(currentLanguage, addWeeks, getWeek);
 
-const requestLearningChart = (username: string): RequestLearningChartAction => ({
-  type: ActionKeys.REQUEST_LEARNING_CHART,
-  username
-});
+  const friends: Friend[] = currentLanguage.points_ranking_data.filter(prd => !prd.self).map(rd => ({
+    avatarUrl: rd.avatar,
+    fullname: rd.fullname,
+    username: rd.username
+  }));
 
-const receiveLearningChart = (learningChartData: LearningChartData): ReceiveLearningChartAction => ({
-  type: ActionKeys.RECEIVE_LEARNING_CHART,
-  learningChartData
-});
-
-export const prepareLearningChart = (username: string) => (
-  dispatch: Dispatch<ActionTypes>,
-  getState: () => DuoStatsStore
-) => {
-  if (getState().learningCharts.find(lc => lc.username === username)) {
-    return;
-  }
-
-  dispatch(requestLearningChart(username));
-  getUser(username)
-    .then(user => {
-      const langData = user.language_data;
-      const currentLanguage = langData[Object.keys(langData)[0]] as LanguageData;
-
-      const monthlyData = prepareData(currentLanguage, addMonths, getMonth);
-      const weeklyData = prepareData(currentLanguage, addWeeks, getWeek);
-
-      const friends: Friend[] = currentLanguage.points_ranking_data.filter(prd => !prd.self).map(rd => ({
-        avatarUrl: rd.avatar,
-        fullname: rd.fullname,
-        username: rd.username
-      }));
-
-      const learningChartData: LearningChartData = {
-        isLoading: false,
-        username,
-        monthlyData,
-        weeklyData,
-        friends
-      };
-
-      dispatch(receiveLearningChart(learningChartData));
-    })
-    .catch(err => {
-      const errorChartData: LearningChartData = {
-        isLoading: false,
-        username,
-        error: `Failed to load user ${username}`
-      };
-      dispatch(receiveLearningChart(errorChartData));
-    });
+  const learningChartData: LearningChartData = {
+    isLoading: false,
+    username: user.username,
+    avatarUrl: user.avatar,
+    monthlyData,
+    weeklyData,
+    friends
+  };
+  return learningChartData;
 };
 
 function prepareData(

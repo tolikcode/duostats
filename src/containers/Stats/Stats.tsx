@@ -10,12 +10,12 @@ import LearningChart from '../../components/LearningChart/LearningChart';
 import { RadioGroup, FormControlLabel, Radio, Grid } from 'material-ui';
 
 import './Stats.css';
-import { prepareLearningChart } from '../../actions/prepareLearningChart';
 import { LearningChartData } from '../../interfaces/LearningChartData';
 import WordStats from '../../components/WordStats/WordStats';
 import IntervalOptionSelector from '../../components/IntervalOptionSelector/IntervalOptionSelector';
 import FriendsList from '../../components/FriendsList/FriendsList';
 import { RouteComponentProps } from 'react-router-dom';
+import { loadUserData } from '../../actions/loadUserData';
 
 interface StatsProps extends RouteComponentProps<{}> {
   myUsername: string;
@@ -45,7 +45,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
   prepareCharts(props: StatsProps) {
     const username = this.getCurrentUsername(props);
     if (username) {
-      this.props.dispatch(prepareLearningChart(username));
+      this.props.dispatch(loadUserData(username));
     }
   }
 
@@ -84,7 +84,9 @@ class Stats extends React.Component<StatsProps, StatsState> {
   render() {
     const username = this.getCurrentUsername(this.props);
 
-    const chartData = this.props.learningCharts.find(lc => lc.username === username);
+    const chartData = this.props.learningCharts.find(
+      lc => lc.username.toUpperCase() === username.toUpperCase()
+    );
 
     if (!chartData) {
       return null;

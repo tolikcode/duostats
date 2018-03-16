@@ -3,7 +3,7 @@ import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import { Manager, Target, Popper } from 'react-popper';
-import { ClickAwayListener, Button, Collapse, Paper, MenuList, MenuItem } from 'material-ui';
+import { ClickAwayListener, Button, Collapse, Paper, MenuList, MenuItem, Avatar } from 'material-ui';
 import Portal from 'material-ui/Portal/Portal';
 import { DuoStatsStore } from '../../interfaces/DuoStatsStore';
 import { connect } from 'react-redux';
@@ -11,6 +11,7 @@ import { setMyUsername, SetMyUsernameAction } from '../../actions/setMyUsername'
 
 interface ProfileButtonProps {
   myUsername: string;
+  myAvatarUrl: string;
   setMyUsername: (username: string) => SetMyUsernameAction;
 }
 
@@ -49,6 +50,7 @@ class ProfileButton extends React.Component<ProfileButtonProps, ProfileButtonSta
             aria-haspopup="true"
             onClick={this.toggleMenu}
           >
+            <Avatar src={this.props.myAvatarUrl + '/medium'} />
             {this.props.myUsername}
           </Button>
         </Target>
@@ -72,7 +74,10 @@ class ProfileButton extends React.Component<ProfileButtonProps, ProfileButtonSta
 }
 
 const mapStateToProps = (state: DuoStatsStore) => {
-  return { myUsername: state.myUsername };
+  const myChart = state.learningCharts.find(
+    lc => lc.username.toUpperCase() === state.myUsername.toUpperCase()
+  );
+  return { myUsername: state.myUsername, myAvatarUrl: myChart ? myChart.avatarUrl : undefined };
 };
 
 export default connect(mapStateToProps, { setMyUsername })(ProfileButton);
