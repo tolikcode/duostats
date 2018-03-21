@@ -19,6 +19,7 @@ import * as getMonth from 'date-fns/get_month';
 import * as format from 'date-fns/format';
 import * as addWeeks from 'date-fns/add_weeks';
 import * as addMonths from 'date-fns/add_months';
+import { UserData } from '../interfaces/UserData';
 
 export const prepareLearningChart = (user: UserResponse): LearningChartData => {
   const langData = user.language_data;
@@ -33,13 +34,21 @@ export const prepareLearningChart = (user: UserResponse): LearningChartData => {
     username: rd.username
   }));
 
-  const learningChartData: LearningChartData = {
-    isLoading: false,
-    username: user.username,
+  const userData: UserData = {
     avatarUrl: user.avatar,
+    fullname: user.fullname,
+    languageString: currentLanguage.language_string,
+    level: currentLanguage.level,
+    xp: currentLanguage.points,
     monthlyData,
     weeklyData,
     friends
+  };
+
+  const learningChartData: LearningChartData = {
+    isLoading: false,
+    username: user.username,
+    userData
   };
   return learningChartData;
 };

@@ -1,12 +1,10 @@
 import { LearningInterval } from './LearningInterval';
 import { Friend } from './Friend';
+import { UserData } from './UserData';
 
 export interface LearningChartData {
   isLoading: boolean;
   username: string;
-  avatarUrl?: string;
-  monthlyData?: LearningInterval[];
-  weeklyData?: LearningInterval[];
+  userData?: UserData;
   error?: string;
-  friends?: Friend[];
 }

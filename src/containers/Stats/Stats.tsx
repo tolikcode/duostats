@@ -16,6 +16,7 @@ import IntervalOptionSelector from '../../components/IntervalOptionSelector/Inte
 import FriendsList from '../../components/FriendsList/FriendsList';
 import { RouteComponentProps } from 'react-router-dom';
 import { loadUserData } from '../../actions/loadUserData';
+import TitleBlock from '../../components/TitleBlock/TitleBlock';
 
 interface StatsProps extends RouteComponentProps<{}> {
   myUsername: string;
@@ -88,7 +89,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
       lc => lc.username.toUpperCase() === username.toUpperCase()
     );
 
-    if (!chartData) {
+    if (!chartData || !chartData.userData) {
       return null;
     }
 
@@ -101,14 +102,10 @@ class Stats extends React.Component<StatsProps, StatsState> {
     }
 
     const intervals =
-      this.state.intervalOption === IntervalOptions.Month ? chartData.monthlyData : chartData.weeklyData;
-
-    if (!intervals) {
-      return null;
-    }
-
+      this.state.intervalOption === IntervalOptions.Month
+        ? chartData.userData.monthlyData
+        : chartData.userData.weeklyData;
     const selectedInterval = this.getSelectedInterval(intervals);
-    const friends = chartData.friends ? chartData.friends : [];
 
     return (
       <Grid container>
@@ -126,7 +123,10 @@ class Stats extends React.Component<StatsProps, StatsState> {
           <Grid item>{selectedInterval !== null && <WordStats {...selectedInterval} />}</Grid>
         </Grid>
         <Grid item xs={12} md={3}>
-          <FriendsList friends={friends} onFriendSelected={(un: string) => this.onFriendSelected(un)} />
+          <FriendsList
+            friends={chartData.userData.friends}
+            onFriendSelected={(un: string) => this.onFriendSelected(un)}
+          />
         </Grid>
         <Grid item md={1} />
       </Grid>

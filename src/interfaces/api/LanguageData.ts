@@ -1,10 +1,12 @@
-import { Skill }   from './Skill';
+import { Skill } from './Skill';
 import { PointsRankingData } from './PointsRankingData';
 
 export interface LanguageData {
   language: string;
   language_string: string;
   num_skills_learned: number;
+  level: number;
+  points: number;
   skills: Skill[];
   points_ranking_data: PointsRankingData[];
-};
+}

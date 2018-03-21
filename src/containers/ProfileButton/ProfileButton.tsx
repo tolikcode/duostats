@@ -1,3 +1,4 @@
+import './ProfileButton.css';
 import * as React from 'react';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
@@ -52,7 +53,7 @@ class ProfileButton extends React.Component<ProfileButtonProps, ProfileButtonSta
             onClick={this.toggleMenu}
           >
             <DuostatsAvatar src={this.props.myAvatarUrl} size="medium" />
-            {this.props.myUsername}
+            <span className="username">{this.props.myUsername}</span>
           </Button>
         </Target>
         <Portal>
@@ -78,7 +79,8 @@ const mapStateToProps = (state: DuoStatsStore) => {
   const myChart = state.learningCharts.find(
     lc => lc.username.toUpperCase() === state.myUsername.toUpperCase()
   );
-  return { myUsername: state.myUsername, myAvatarUrl: myChart ? myChart.avatarUrl : undefined };
+  const avatarUrl = myChart && myChart.userData ? myChart.userData.avatarUrl : undefined;
+  return { myUsername: state.myUsername, myAvatarUrl: avatarUrl };
 };
 
 export default connect(mapStateToProps, { setMyUsername })(ProfileButton);
