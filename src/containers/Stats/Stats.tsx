@@ -89,7 +89,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
       lc => lc.username.toUpperCase() === username.toUpperCase()
     );
 
-    if (!chartData || !chartData.userData) {
+    if (!chartData) {
       return null;
     }
 
@@ -99,6 +99,10 @@ class Stats extends React.Component<StatsProps, StatsState> {
 
     if (chartData.error) {
       return chartData.error;
+    }
+
+    if (!chartData.userData) {
+      return null;
     }
 
     const intervals =
@@ -111,6 +115,9 @@ class Stats extends React.Component<StatsProps, StatsState> {
       <Grid container>
         <Grid item md={1} />
         <Grid item xs={12} md={7} container direction="column">
+          <Grid item>
+            <TitleBlock {...chartData.userData} />
+          </Grid>
           <Grid item>
             <LearningChart data={intervals} onIntervalSelected={index => this.onIntervalSelected(index)} />
           </Grid>

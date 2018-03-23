@@ -20,7 +20,7 @@ class LearningChart extends React.Component<LanguageChartProps> {
       <ResponsiveContainer aspect={4.0 / 2.0}>
         <BarChart data={this.props.data}>
           <XAxis dataKey="name" ticks={ticks} />
-          <YAxis />
+          <YAxis width={35} />
           <CartesianGrid strokeDasharray="3 3" />
           <Tooltip />
           <Bar
