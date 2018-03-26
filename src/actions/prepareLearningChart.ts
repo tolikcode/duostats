@@ -10,6 +10,7 @@ import { UserResponse } from '../interfaces/api/UserResponse';
 import { LanguageData } from '../interfaces/api/LanguageData';
 import { requestLearningChart } from './requestLearningChart';
 import { receiveLearningChart } from './receiveLearningChart';
+import { UserData } from '../interfaces/UserData';
 
 import * as dateMin from 'date-fns/min';
 import * as dateParse from 'date-fns/parse';
@@ -19,14 +20,17 @@ import * as getMonth from 'date-fns/get_month';
 import * as format from 'date-fns/format';
 import * as addWeeks from 'date-fns/add_weeks';
 import * as addMonths from 'date-fns/add_months';
-import { UserData } from '../interfaces/UserData';
+import * as startOfISOWeek from 'date-fns/start_of_iso_week';
+import * as startOfMonth from 'date-fns/start_of_month';
+import * as endOfISOWeek from 'date-fns/end_of_iso_week';
+import * as endOfMonth from 'date-fns/end_of_month';
 
 export const prepareLearningChart = (user: UserResponse): LearningChartData => {
   const langData = user.language_data;
   const currentLanguage = langData[Object.keys(langData)[0]] as LanguageData;
 
-  const monthlyData = prepareData(currentLanguage, addMonths, getMonth);
-  const weeklyData = prepareData(currentLanguage, addWeeks, getWeek);
+  const monthlyData = prepareData(currentLanguage, addMonths, getMonth, startOfMonth, endOfMonth);
+  const weeklyData = prepareData(currentLanguage, addWeeks, getWeek, startOfISOWeek, endOfISOWeek);
 
   const friends: Friend[] = currentLanguage.points_ranking_data.filter(prd => !prd.self).map(rd => ({
     avatarUrl: rd.avatar,
@@ -56,7 +60,9 @@ export const prepareLearningChart = (user: UserResponse): LearningChartData => {
 function prepareData(
   currentLanguage: LanguageData,
   incrementInterval: (date: Date, count: number) => Date,
-  getIntervalNumber: (date: Date) => number
+  getIntervalNumber: (date: Date) => number,
+  getIntervalStart: (date: Date) => Date,
+  getIntervalEnd: (date: Date) => Date
 ): LearningInterval[] {
   // TODO: this should also include NOT YET mastered skills in progress
   const masteredSkills = currentLanguage.skills.filter(s => s.mastered);
@@ -69,7 +75,14 @@ function prepareData(
     return dateMin(earliestDate, skill.learnedDate);
   }, new Date());
 
-  const emptyIntervalData = initIntervalData(startDate, new Date(), incrementInterval, getIntervalNumber);
+  const emptyIntervalData = initIntervalData(
+    startDate,
+    new Date(),
+    incrementInterval,
+    getIntervalNumber,
+    getIntervalStart,
+    getIntervalEnd
+  );
 
   const chartData = masteredSkills.reduce((res, s) => {
     const interval = res.find(
@@ -90,7 +103,9 @@ function initIntervalData(
   startDate: Date,
   endDate: Date,
   incrementInterval: (date: Date, count: number) => Date,
-  getIntervalNumber: (date: Date) => number
+  getIntervalNumber: (date: Date) => number,
+  getIntervalStart: (date: Date) => Date,
+  getIntervalEnd: (date: Date) => Date
 ): LearningInterval[] {
   const chartData: LearningInterval[] = [];
 
@@ -108,7 +123,9 @@ function initIntervalData(
       year,
       intervalNumber: interval,
       words: [],
-      name: nameExists ? undefined : name
+      name: nameExists ? undefined : name,
+      startDate: getIntervalStart(date),
+      endDate: getIntervalEnd(date)
     });
     date = incrementInterval(date, 1);
     year = getYear(date);

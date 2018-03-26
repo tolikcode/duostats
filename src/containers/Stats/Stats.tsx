@@ -127,7 +127,11 @@ class Stats extends React.Component<StatsProps, StatsState> {
               onOptionChanged={option => this.onIntervalOptionChanged(option)}
             />
           </Grid>
-          <Grid item>{selectedInterval !== null && <WordStats {...selectedInterval} />}</Grid>
+          <Grid item>
+            {selectedInterval !== null && (
+              <WordStats intervalOption={this.state.intervalOption} intervalData={selectedInterval} />
+            )}
+          </Grid>
         </Grid>
         <Grid item xs={12} md={3}>
           <FriendsList

@@ -3,4 +3,6 @@ export interface LearningInterval {
   intervalNumber: number; // week or month number
   words: string[];
   name?: string;
+  startDate: Date;
+  endDate: Date;
 }
