@@ -10,6 +10,7 @@
     "@types/recharts": "^1.0.17",
     "date-fns": "^1.29.0",
     "gh-pages": "^1.1.0",
+    "ie-array-find-polyfill": "^1.1.0",
     "material-ui": "^1.0.0-beta.37",
     "query-string": "^5.1.0",
     "react": "^16.2.0",
