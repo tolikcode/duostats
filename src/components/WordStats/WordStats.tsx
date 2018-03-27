@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styles } from './WordStats.css';
 import { LearningInterval } from '../../interfaces/LearningInterval';
-import { Grid, Typography } from 'material-ui';
+import { Grid, Typography, WithStyles } from 'material-ui';
 import * as format from 'date-fns/format';
 import { IntervalOptions } from '../../interfaces/IntervalOptions';
 import withStyles from 'material-ui/styles/withStyles';
@@ -9,11 +9,9 @@ import withStyles from 'material-ui/styles/withStyles';
 export interface WordStatsProps {
   intervalOption: IntervalOptions;
   intervalData: LearningInterval;
-  // tslint:disable-next-line:no-any
-  classes?: any;
 }
 
-const WordStats = (props: WordStatsProps) => {
+const WordStats = (props: WordStatsProps & WithStyles<string>) => {
   const { classes, intervalData } = props;
   let words = [...intervalData.words]; // copying array to avoid props modification
   const groupedWords = [];
@@ -49,4 +47,4 @@ const WordStats = (props: WordStatsProps) => {
   );
 };
 
-export default withStyles(styles)(WordStats);
+export default withStyles(styles)<WordStatsProps>(WordStats);

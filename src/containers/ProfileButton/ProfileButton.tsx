@@ -1,10 +1,20 @@
-import './ProfileButton.css';
+import { styles } from './ProfileButton.css';
 import * as React from 'react';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import { Manager, Target, Popper } from 'react-popper';
-import { ClickAwayListener, Button, Collapse, Paper, MenuList, MenuItem, Avatar } from 'material-ui';
+import {
+  ClickAwayListener,
+  Button,
+  Collapse,
+  Paper,
+  MenuList,
+  MenuItem,
+  Avatar,
+  withStyles,
+  WithStyles
+} from 'material-ui';
 import Portal from 'material-ui/Portal/Portal';
 import { DuoStatsStore } from '../../interfaces/DuoStatsStore';
 import { connect } from 'react-redux';
@@ -21,7 +31,7 @@ interface ProfileButtonState {
   isMenuOpen: boolean;
 }
 
-class ProfileButton extends React.Component<ProfileButtonProps, ProfileButtonState> {
+class ProfileButton extends React.Component<ProfileButtonProps & WithStyles<string>, ProfileButtonState> {
   state = { isMenuOpen: false };
 
   toggleMenu = () => {
@@ -39,28 +49,30 @@ class ProfileButton extends React.Component<ProfileButtonProps, ProfileButtonSta
 
   render() {
     const { isMenuOpen } = this.state;
+    const { classes } = this.props;
 
     if (!this.props.myUsername) {
-      return <Button>About</Button>;
+      return <Button className={classes.profileButton}>About</Button>;
     }
 
     return (
       <Manager>
         <Target>
           <Button
+            className={classes.profileButton}
             aria-owns={open ? 'menu-list-collapse' : undefined}
             aria-haspopup="true"
             onClick={this.toggleMenu}
           >
             <DuostatsAvatar src={this.props.myAvatarUrl} size="medium" />
-            <span className="username">{this.props.myUsername}</span>
+            <span className={classes.username}>{this.props.myUsername}</span>
           </Button>
         </Target>
         <Portal>
           <Popper placement="bottom" eventsEnabled={isMenuOpen}>
             <ClickAwayListener onClickAway={this.closeMenu}>
-              <Collapse in={isMenuOpen} style={{ transformOrigin: '0 0 0' }}>
-                <Paper style={{ margin: 3 }}>
+              <Collapse in={isMenuOpen} className={classes.collapse}>
+                <Paper className={classes.paper}>
                   <MenuList role="menu">
                     <MenuItem onClick={this.logout}>Not you?</MenuItem>
                     <MenuItem onClick={this.closeMenu}>About duostats</MenuItem>
@@ -83,4 +95,4 @@ const mapStateToProps = (state: DuoStatsStore) => {
   return { myUsername: state.myUsername, myAvatarUrl: avatarUrl };
 };
 
-export default connect(mapStateToProps, { setMyUsername })(ProfileButton);
+export default connect(mapStateToProps, { setMyUsername })(withStyles<string>(styles)(ProfileButton));
