@@ -1,3 +1,4 @@
+import { styles } from './Stats.css';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import * as queryString from 'query-string';
@@ -7,9 +8,7 @@ import { LanguageData } from '../../interfaces/api/LanguageData';
 import { LearningInterval } from '../../interfaces/LearningInterval';
 import { IntervalOptions } from '../../interfaces/IntervalOptions';
 import LearningChart from '../../components/LearningChart/LearningChart';
-import { RadioGroup, FormControlLabel, Radio, Grid } from 'material-ui';
-
-import './Stats.css';
+import { RadioGroup, FormControlLabel, Radio, Grid, WithStyles, withStyles } from 'material-ui';
 import { LearningChartData } from '../../interfaces/LearningChartData';
 import WordStats from '../../components/WordStats/WordStats';
 import IntervalOptionSelector from '../../components/IntervalOptionSelector/IntervalOptionSelector';
@@ -18,7 +17,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { loadUserData } from '../../actions/loadUserData';
 import TitleBlock from '../../components/TitleBlock/TitleBlock';
 
-interface StatsProps extends RouteComponentProps<{}> {
+interface StatsProps extends RouteComponentProps<{}>, WithStyles<string> {
   myUsername: string;
   learningCharts: LearningChartData[];
   dispatch: Dispatch<{}>;
@@ -83,6 +82,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
   }
 
   render() {
+    const { classes } = this.props;
     const username = this.getCurrentUsername(this.props);
 
     const chartData = this.props.learningCharts.find(
@@ -112,9 +112,9 @@ class Stats extends React.Component<StatsProps, StatsState> {
     const selectedInterval = this.getSelectedInterval(intervals);
 
     return (
-      <Grid container>
+      <Grid container className={classes.noMargin}>
         <Grid item md={1} />
-        <Grid item xs={12} md={7} container direction="column">
+        <Grid item xs={12} md={7} container direction="column" className={classes.noMargin}>
           <Grid item>
             <TitleBlock {...chartData.userData} />
           </Grid>
@@ -134,10 +134,12 @@ class Stats extends React.Component<StatsProps, StatsState> {
           </Grid>
         </Grid>
         <Grid item xs={12} md={3}>
-          <FriendsList
-            friends={chartData.userData.friends}
-            onFriendSelected={(un: string) => this.onFriendSelected(un)}
-          />
+          <div className={classes.friendList}>
+            <FriendsList
+              friends={chartData.userData.friends}
+              onFriendSelected={(un: string) => this.onFriendSelected(un)}
+            />
+          </div>
         </Grid>
         <Grid item md={1} />
       </Grid>
@@ -149,4 +151,4 @@ const mapStateToProps = (state: DuoStatsStore) => {
   return { myUsername: state.myUsername, learningCharts: state.learningCharts };
 };
 
-export default connect(mapStateToProps)(Stats);
+export default connect(mapStateToProps)(withStyles<string>(styles)<StatsProps>(Stats));
