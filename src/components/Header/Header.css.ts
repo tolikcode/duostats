@@ -1,7 +1,10 @@
 export const styles = {
-  flex: {
+  title: {
     flex: 1,
-    color: 'white',
-    marginLeft: '1rem'
+    marginLeft: '1rem',
+    textDecoration: 'none'
+  },
+  white: {
+    color: 'white'
   }
 };

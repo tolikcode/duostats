@@ -20,8 +20,7 @@ class Hello extends React.Component<HelloProps, HelloState> {
     this.state = { username: '' };
   }
 
-  // tslint:disable-next-line no-any
-  onUsernameChange(e: any) {
+  onUsernameChange(e: React.ChangeEvent<HTMLInputElement>) {
     this.setState({ username: e.target.value });
   }
 
@@ -29,11 +28,22 @@ class Hello extends React.Component<HelloProps, HelloState> {
     this.props.setMyUsername(this.state.username);
   }
 
+  onKeyPress = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter') {
+      this.props.setMyUsername(this.state.username);
+    }
+  };
+
   render() {
     return (
       <Card className="helloCard">
         <Typography variant="subheading">Hi, what's your Duolingo username?</Typography>
-        <TextField label="Username" value={this.state.username} onChange={e => this.onUsernameChange(e)} />
+        <TextField
+          label="Username"
+          value={this.state.username}
+          onChange={e => this.onUsernameChange(e)}
+          onKeyPress={e => this.onKeyPress(e)}
+        />
         <Button color="primary" variant="raised" onClick={e => this.onShowClick()}>
           Show Stats
         </Button>
