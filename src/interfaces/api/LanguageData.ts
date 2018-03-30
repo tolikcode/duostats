@@ -8,5 +8,6 @@ export interface LanguageData {
   level: number;
   points: number;
   skills: Skill[];
+  bonus_skills: Skill[];
   points_ranking_data: PointsRankingData[];
 }

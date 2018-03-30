@@ -65,7 +65,8 @@ function prepareData(
   getIntervalEnd: (date: Date) => Date
 ): LearningInterval[] {
   // TODO: this should also include NOT YET mastered skills in progress
-  const masteredSkills = currentLanguage.skills.filter(s => s.mastered);
+  const allSkills = currentLanguage.skills.concat(currentLanguage.bonus_skills);
+  const masteredSkills = allSkills.filter(s => s.mastered);
 
   masteredSkills.forEach(s => {
     s.learnedDate = dateParse(s.learned_ts * 1000);
