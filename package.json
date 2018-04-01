@@ -2,7 +2,7 @@
   "name": "duostats",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://tolikcode.github.io/duostats",
+  "homepage": "https://duostats.com",
   "dependencies": {
     "@types/query-string": "^5.1.0",
     "@types/react-redux": "^5.0.15",
