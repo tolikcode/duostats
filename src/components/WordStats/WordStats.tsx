@@ -1,32 +1,69 @@
 import * as React from 'react';
-import { styles } from './WordStats.css';
 import { LearningInterval } from '../../interfaces/LearningInterval';
-import { Grid, Typography, WithStyles } from 'material-ui';
+import { Grid, Typography } from 'material-ui';
 import * as format from 'date-fns/format';
 import { IntervalOptions } from '../../interfaces/IntervalOptions';
-import withStyles from 'material-ui/styles/withStyles';
 import WordBlock from '../WordBlock/WordBlock';
 
 export interface WordStatsProps {
   intervalOption: IntervalOptions;
-  intervalData: LearningInterval;
+  intervals: LearningInterval[];
+  selectedIntervalIndex?: number;
+  wordsInProgress: string[];
 }
 
-const WordStats = (props: WordStatsProps & WithStyles<string>) => {
-  const { classes, intervalData } = props;
+class WordStats extends React.Component<WordStatsProps> {
+  getSelectedInterval(): LearningInterval | null {
+    const { intervals, selectedIntervalIndex } = this.props;
 
-  const intervalString =
-    props.intervalOption === IntervalOptions.Month
-      ? `in ${format(new Date(intervalData.year, intervalData.intervalNumber, 1), 'MMMM YYYY')}`
-      : `${format(intervalData.startDate, 'D MMM YYYY')} - ${format(intervalData.endDate, 'D MMM YYYY')}`;
+    if (selectedIntervalIndex !== undefined) {
+      return intervals[selectedIntervalIndex];
+    }
 
-  const wordsHeader = `${intervalData.words.length} new words learned ${intervalString}`;
+    return this.getLastIntervalWithWords();
+  }
 
-  return (
-    <div>
-      <WordBlock header={wordsHeader} words={intervalData.words} />
-    </div>
-  );
-};
+  getLastIntervalWithWords(): LearningInterval | null {
+    const withWords = this.props.intervals.filter(i => i.words.length > 0);
+    if (withWords.length > 0) {
+      return withWords[withWords.length - 1];
+    }
 
-export default withStyles(styles)<WordStatsProps>(WordStats);
+    return null;
+  }
+
+  render() {
+    const selectedInterval = this.getSelectedInterval();
+
+    if (selectedInterval === null) {
+      return null;
+    }
+
+    const intervalString =
+      this.props.intervalOption === IntervalOptions.Month
+        ? `in ${format(new Date(selectedInterval.year, selectedInterval.intervalNumber, 1), 'MMMM YYYY')}`
+        : `${format(selectedInterval.startDate, 'D MMM YYYY')} - ${format(
+            selectedInterval.endDate,
+            'D MMM YYYY'
+          )}`;
+
+    const wordsHeader = `${selectedInterval.words.length} new words learned ${intervalString}`;
+
+    const showWordsInProgress =
+      this.props.wordsInProgress.length > 0 && selectedInterval === this.getLastIntervalWithWords();
+
+    return (
+      <div>
+        <WordBlock header={wordsHeader} words={selectedInterval.words} />
+        {showWordsInProgress && (
+          <WordBlock
+            header={this.props.wordsInProgress.length + ' words are  in progress'}
+            words={this.props.wordsInProgress}
+          />
+        )}
+      </div>
+    );
+  }
+}
+
+export default WordStats;

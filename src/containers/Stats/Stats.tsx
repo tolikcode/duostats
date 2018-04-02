@@ -63,20 +63,6 @@ class Stats extends React.Component<StatsProps, StatsState> {
     this.setState({ selectedInterval: intervalIndex });
   }
 
-  getSelectedInterval(data: LearningInterval[]): LearningInterval | null {
-    if (this.state.selectedInterval !== undefined) {
-      return data[this.state.selectedInterval];
-    }
-
-    // Returns the last interval with words // TODO: consider lodash
-    const withWords = data.filter(i => i.words.length > 0);
-    if (withWords.length > 0) {
-      return withWords[withWords.length - 1];
-    }
-
-    return null;
-  }
-
   onFriendSelected(username: string) {
     this.setState({ selectedInterval: undefined });
     this.props.history.push(`/stats?username=${username}`);
@@ -110,7 +96,6 @@ class Stats extends React.Component<StatsProps, StatsState> {
       this.state.intervalOption === IntervalOptions.Month
         ? chartData.userData.monthlyData
         : chartData.userData.weeklyData;
-    const selectedInterval = this.getSelectedInterval(intervals);
 
     return (
       <Grid container className={classes.noMargin}>
@@ -129,18 +114,12 @@ class Stats extends React.Component<StatsProps, StatsState> {
             />
           </Grid>
           <Grid item>
-            {selectedInterval !== null && (
-              <WordStats intervalOption={this.state.intervalOption} intervalData={selectedInterval} />
-            )}
-          </Grid>
-          <Grid item>
-            {chartData.userData.wordsInProgress &&
-              chartData.userData.wordsInProgress.length !== 0 && (
-                <WordBlock
-                  header={chartData.userData.wordsInProgress.length + ' words are  in progress'}
-                  words={chartData.userData.wordsInProgress}
-                />
-              )}
+            <WordStats
+              intervalOption={this.state.intervalOption}
+              intervals={intervals}
+              selectedIntervalIndex={this.state.selectedInterval}
+              wordsInProgress={chartData.userData.wordsInProgress}
+            />
           </Grid>
         </Grid>
         <Grid item xs={12} md={3}>
