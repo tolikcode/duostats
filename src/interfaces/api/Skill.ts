@@ -3,6 +3,7 @@ export interface Skill {
   mastered: boolean;
   words: string[];
   learned_ts: number;
+  progress_percent: number;
 
-  learnedDate: Date;
-};
+  learnedDate: Date; // calculated field
+}

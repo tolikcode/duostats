@@ -9,5 +9,6 @@ export interface UserData {
   xp: number;
   monthlyData: LearningInterval[];
   weeklyData: LearningInterval[];
+  wordsInProgress: string[];
   friends: Friend[];
 }

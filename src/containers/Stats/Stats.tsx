@@ -16,6 +16,7 @@ import FriendsList from '../../components/FriendsList/FriendsList';
 import { RouteComponentProps } from 'react-router-dom';
 import { loadUserData } from '../../actions/loadUserData';
 import TitleBlock from '../../components/TitleBlock/TitleBlock';
+import WordBlock from '../../components/WordBlock/WordBlock';
 
 interface StatsProps extends RouteComponentProps<{}>, WithStyles<string> {
   myUsername: string;
@@ -131,6 +132,15 @@ class Stats extends React.Component<StatsProps, StatsState> {
             {selectedInterval !== null && (
               <WordStats intervalOption={this.state.intervalOption} intervalData={selectedInterval} />
             )}
+          </Grid>
+          <Grid item>
+            {chartData.userData.wordsInProgress &&
+              chartData.userData.wordsInProgress.length !== 0 && (
+                <WordBlock
+                  header={chartData.userData.wordsInProgress.length + ' words are  in progress'}
+                  words={chartData.userData.wordsInProgress}
+                />
+              )}
           </Grid>
         </Grid>
         <Grid item xs={12} md={3}>

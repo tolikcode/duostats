@@ -31,6 +31,7 @@ export const prepareLearningChart = (user: UserResponse): LearningChartData => {
 
   const monthlyData = prepareData(currentLanguage, addMonths, getMonth, startOfMonth, endOfMonth);
   const weeklyData = prepareData(currentLanguage, addWeeks, getWeek, startOfISOWeek, endOfISOWeek);
+  const wordsInProgress = getWordsInProgress(currentLanguage);
 
   const friends: Friend[] = currentLanguage.points_ranking_data.filter(prd => !prd.self).map(rd => ({
     avatarUrl: rd.avatar,
@@ -46,6 +47,7 @@ export const prepareLearningChart = (user: UserResponse): LearningChartData => {
     xp: currentLanguage.points,
     monthlyData,
     weeklyData,
+    wordsInProgress,
     friends
   };
 
@@ -134,4 +136,10 @@ function initIntervalData(
   }
 
   return chartData;
+}
+
+function getWordsInProgress(currentLanguage: LanguageData): string[] {
+  const allSkills = currentLanguage.skills.concat(currentLanguage.bonus_skills);
+  const skillsInProgress = allSkills.filter(s => !s.mastered && s.progress_percent !== 0);
+  return skillsInProgress.reduce((arr, s) => arr.concat(s.words), [] as string[]);
 }
