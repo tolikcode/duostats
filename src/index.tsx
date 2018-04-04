@@ -6,10 +6,11 @@ import registerServiceWorker from './registerServiceWorker';
 import './index.css';
 import { configureStore } from './store/configureStore';
 import { Provider } from 'react-redux';
-import { HashRouter as Router } from 'react-router-dom';
+import { HashRouter as Router, Route } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import { green, red, lightBlue } from 'material-ui/colors';
 import CssBaseline from 'material-ui/CssBaseline';
+import { withTracker } from './withTracker';
 
 const store = configureStore();
 
@@ -26,7 +27,7 @@ ReactDOM.render(
     <Router>
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
-        <App />
+        <Route component={withTracker(App)} />
       </MuiThemeProvider>
     </Router>
   </Provider>,
