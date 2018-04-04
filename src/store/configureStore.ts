@@ -11,12 +11,12 @@ const persistConfig = {
   whitelist: ['myUsername']
 };
 
-export function configureStore(): Store<DuoStatsStore> {
+export function configureStore(): { store: Store<DuoStatsStore>; persistor: Persistor } {
   // tslint:disable-next-line no-any
   const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   const persistedReducer = persistReducer(persistConfig, rootReducer);
   const store = createStore(persistedReducer, composeEnhancers(applyMiddleware(thunk)));
-  persistStore(store);
+  const persistor = persistStore(store);
 
-  return store;
+  return { store, persistor };
 }

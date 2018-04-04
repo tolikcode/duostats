@@ -11,8 +11,9 @@ import { MuiThemeProvider, createMuiTheme } from 'material-ui/styles';
 import { green, red, lightBlue } from 'material-ui/colors';
 import CssBaseline from 'material-ui/CssBaseline';
 import { withTracker } from './withTracker';
+import { PersistGate } from 'redux-persist/integration/react';
 
-const store = configureStore();
+const storeConfiguration = configureStore();
 
 const theme = createMuiTheme({
   palette: {
@@ -23,13 +24,15 @@ const theme = createMuiTheme({
 });
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Router>
-      <MuiThemeProvider theme={theme}>
-        <CssBaseline />
-        <Route component={withTracker(App)} />
-      </MuiThemeProvider>
-    </Router>
+  <Provider store={storeConfiguration.store}>
+    <PersistGate loading={null} persistor={storeConfiguration.persistor}>
+      <Router>
+        <MuiThemeProvider theme={theme}>
+          <CssBaseline />
+          <Route component={withTracker(App)} />
+        </MuiThemeProvider>
+      </Router>
+    </PersistGate>
   </Provider>,
   document.getElementById('root') as HTMLElement
 );
