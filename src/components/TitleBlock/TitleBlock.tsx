@@ -1,6 +1,6 @@
-import './TitleBlock.css';
 import * as React from 'react';
-import { Grid, Typography } from 'material-ui';
+import { styles } from './TitleBlock.css';
+import { Grid, Typography, Tooltip, withStyles, WithStyles } from 'material-ui';
 import DuostatsAvatar from '../DuostatsAvatar/DuostatsAvatar';
 
 interface TitleBlockProps {
@@ -11,22 +11,36 @@ interface TitleBlockProps {
   xp: number;
 }
 
-const TitleBlock = (props: TitleBlockProps) => {
+const TitleBlock = (props: TitleBlockProps & WithStyles<string>) => {
+  const { classes } = props;
   return (
-    <div className="titleBlock">
+    <div className={classes.titleBlock}>
       <DuostatsAvatar src={props.avatarUrl} size="large" />
-      <div className="titleText">
+      <div className={classes.titleText}>
         <Typography variant="headline">{props.fullname}</Typography>
-        <Typography variant="subheading">studies {props.languageString}</Typography>
-        <div className="languageInfo">
+        <div className={classes.languageLine}>
+          <Typography variant="subheading">studies</Typography>
+          <Tooltip
+            title="You can see only the currently active language in Duolingo"
+            enterTouchDelay={0}
+            leaveTouchDelay={3000}
+            enterDelay={200}
+            leaveDelay={200}
+          >
+            <Typography className={classes.languageString} variant="subheading">
+              {props.languageString}
+            </Typography>
+          </Tooltip>
+        </div>
+        <div className={classes.languageInfo}>
           <Typography variant="body2">Level {props.level} </Typography>
-          <div className="xpText">
-            <Typography variant="body2">{props.xp} XP</Typography>
-          </div>
+          <Typography variant="body2" className={classes.xpText}>
+            {props.xp} XP
+          </Typography>
         </div>
       </div>
     </div>
   );
 };
 
-export default TitleBlock;
+export default withStyles<string>(styles)<TitleBlockProps>(TitleBlock);
