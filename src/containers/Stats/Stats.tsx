@@ -17,6 +17,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { loadUserData } from '../../actions/loadUserData';
 import TitleBlock from '../../components/TitleBlock/TitleBlock';
 import WordBlock from '../../components/WordBlock/WordBlock';
+import Loading from '../../components/Loading/Loading';
 
 interface StatsProps extends RouteComponentProps<{}>, WithStyles<string> {
   myUsername: string;
@@ -81,7 +82,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
     }
 
     if (chartData.isLoading) {
-      return 'Loading..';
+      return <Loading />;
     }
 
     if (chartData.error) {

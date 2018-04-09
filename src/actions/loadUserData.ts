@@ -32,7 +32,7 @@ export const loadUserData = (username: string) => (
       dispatch(receiveLearningChart(errorChartData));
       GoogleAnalytics.event({
         category: 'Errors',
-        action: err.toString(),
+        action: `Username: ${username} Error: ${err.toString()}`,
         label: 'LoadUserData Failed'
       });
     });
