@@ -11,6 +11,7 @@ import { LanguageData } from '../interfaces/api/LanguageData';
 import { requestLearningChart } from './requestLearningChart';
 import { receiveLearningChart } from './receiveLearningChart';
 import { UserData } from '../interfaces/UserData';
+import * as GoogleAnalytics from 'react-ga';
 
 import * as dateMin from 'date-fns/min';
 import * as dateParse from 'date-fns/parse';
@@ -74,6 +75,14 @@ function prepareData(
       s.learnedDate = dateParse(s.learned_ts * 1000);
     }
   });
+
+  if (masteredSkills.some(s => !s.learnedDate)) {
+    GoogleAnalytics.event({
+      category: 'Errors',
+      action: 'No learned_ts',
+      label: 'No learned_ts'
+    });
+  }
 
   const startDate = masteredSkills.reduce((earliestDate, skill) => {
     return skill.learnedDate ? dateMin(earliestDate, skill.learnedDate) : earliestDate;

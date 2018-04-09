@@ -6,6 +6,7 @@ import { getUser } from '../api/api';
 import { LearningChartData } from '../interfaces/LearningChartData';
 import { receiveLearningChart } from './receiveLearningChart';
 import { prepareLearningChart } from './prepareLearningChart';
+import * as GoogleAnalytics from 'react-ga';
 
 export const loadUserData = (username: string) => (
   dispatch: Dispatch<ActionTypes>,
@@ -29,5 +30,10 @@ export const loadUserData = (username: string) => (
         error: `Failed to load user ${username}`
       };
       dispatch(receiveLearningChart(errorChartData));
+      GoogleAnalytics.event({
+        category: 'Errors',
+        action: err.toString(),
+        label: 'LoadUserData Failed'
+      });
     });
 };
