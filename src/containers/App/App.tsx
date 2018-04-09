@@ -7,6 +7,7 @@ import Stats from '../Stats/Stats';
 import Header from '../../components/Header/Header';
 import { setMyUsername, SetMyUsernameAction } from '../../actions/setMyUsername';
 import { DuoStatsStore } from '../../interfaces/DuoStatsStore';
+import About from '../../components/About/About';
 
 interface AppProps extends RouteComponentProps<AppProps> {
   myUsername: string;
@@ -16,7 +17,7 @@ interface AppProps extends RouteComponentProps<AppProps> {
 class App extends React.Component<AppProps> {
   redirectIfRequired() {
     const redirectTo = this.props.myUsername ? '/stats' : '/hello';
-    if (this.props.location.pathname !== redirectTo) {
+    if (this.props.location.pathname !== redirectTo && this.props.location.pathname !== '/about') {
       return <Redirect to={redirectTo} />;
     }
 
@@ -31,6 +32,7 @@ class App extends React.Component<AppProps> {
           {this.redirectIfRequired()}
           <Route path="/hello" component={() => <Hello setMyUsername={this.props.setMyUsername} />} />
           <Route path="/stats" component={Stats} />
+          <Route path="/about" component={About} />
         </div>
       </div>
     );

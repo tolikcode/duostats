@@ -20,6 +20,7 @@ import { DuoStatsStore } from '../../interfaces/DuoStatsStore';
 import { connect } from 'react-redux';
 import { setMyUsername, SetMyUsernameAction } from '../../actions/setMyUsername';
 import DuostatsAvatar from '../../components/DuostatsAvatar/DuostatsAvatar';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 interface ProfileButtonProps {
   myUsername: string;
@@ -31,7 +32,10 @@ interface ProfileButtonState {
   isMenuOpen: boolean;
 }
 
-class ProfileButton extends React.Component<ProfileButtonProps & WithStyles<string>, ProfileButtonState> {
+class ProfileButton extends React.Component<
+  ProfileButtonProps & RouteComponentProps<ProfileButtonProps> & WithStyles<string>,
+  ProfileButtonState
+> {
   state = { isMenuOpen: false };
 
   toggleMenu = () => {
@@ -45,6 +49,16 @@ class ProfileButton extends React.Component<ProfileButtonProps & WithStyles<stri
   logout = () => {
     this.props.setMyUsername('');
     this.closeMenu();
+    this.props.history.push('/hello');
+  };
+
+  goToAbout = () => {
+    if (this.props.location.pathname !== '/about') {
+      this.props.history.push('/about');
+    }
+    if (this.state.isMenuOpen) {
+      this.closeMenu();
+    }
   };
 
   render() {
@@ -52,7 +66,11 @@ class ProfileButton extends React.Component<ProfileButtonProps & WithStyles<stri
     const { classes } = this.props;
 
     if (!this.props.myUsername) {
-      return <Button className={classes.profileButton}>About</Button>;
+      return (
+        <Button onClick={this.goToAbout} className={classes.profileButton}>
+          About
+        </Button>
+      );
     }
 
     return (
@@ -75,7 +93,7 @@ class ProfileButton extends React.Component<ProfileButtonProps & WithStyles<stri
                 <Paper className={classes.paper}>
                   <MenuList role="menu">
                     <MenuItem onClick={this.logout}>Not you?</MenuItem>
-                    <MenuItem onClick={this.closeMenu}>About duostats</MenuItem>
+                    <MenuItem onClick={this.goToAbout}>About duostats</MenuItem>
                   </MenuList>
                 </Paper>
               </Collapse>
@@ -95,4 +113,8 @@ const mapStateToProps = (state: DuoStatsStore) => {
   return { myUsername: state.myUsername, myAvatarUrl: avatarUrl };
 };
 
-export default connect(mapStateToProps, { setMyUsername })(withStyles<string>(styles)(ProfileButton));
+const connected = connect(mapStateToProps, { setMyUsername })(ProfileButton);
+const routed = withRouter<RouteComponentProps<ProfileButtonProps>>(connected);
+
+// tslint:disable-next-line:no-any
+export default withStyles<string>(styles)<any>(routed);
