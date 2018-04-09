@@ -4,6 +4,7 @@ import { Grid, Typography, Tooltip, withStyles, WithStyles } from 'material-ui';
 import DuostatsAvatar from '../DuostatsAvatar/DuostatsAvatar';
 
 interface TitleBlockProps {
+  username: string;
   fullname: string;
   avatarUrl: string;
   languageString: string;
@@ -13,11 +14,12 @@ interface TitleBlockProps {
 
 const TitleBlock = (props: TitleBlockProps & WithStyles<string>) => {
   const { classes } = props;
+  const name = props.fullname ? props.fullname : props.username;
   return (
     <div className={classes.titleBlock}>
       <DuostatsAvatar src={props.avatarUrl} size="large" />
       <div className={classes.titleText}>
-        <Typography variant="headline">{props.fullname}</Typography>
+        <Typography variant="headline">{name}</Typography>
         <div className={classes.languageLine}>
           <Typography variant="subheading">studies</Typography>
           <Tooltip

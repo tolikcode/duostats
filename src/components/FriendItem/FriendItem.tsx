@@ -10,10 +10,11 @@ interface FriendItemProps {
 }
 
 const FriendItem = (props: FriendItemProps) => {
+  const name = props.friend.fullname ? props.friend.fullname : props.friend.username;
   return (
     <ListItem button onClick={() => props.onClick(props.friend.username)}>
       <DuostatsAvatar src={props.friend.avatarUrl} size="medium" />
-      <ListItemText primary={props.friend.fullname} />
+      <ListItemText primary={name} />
     </ListItem>
   );
 };

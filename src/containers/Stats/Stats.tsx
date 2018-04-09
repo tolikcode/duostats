@@ -102,7 +102,7 @@ class Stats extends React.Component<StatsProps, StatsState> {
         <Grid item md={1} />
         <Grid item xs={12} md={7} container direction="column" className={classes.noMargin}>
           <Grid item>
-            <TitleBlock {...chartData.userData} />
+            <TitleBlock {...chartData.userData} username={chartData.username} />
           </Grid>
           <Grid item>
             <LearningChart data={intervals} onIntervalSelected={index => this.onIntervalSelected(index)} />
