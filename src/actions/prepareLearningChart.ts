@@ -66,17 +66,24 @@ function prepareData(
   getIntervalStart: (date: Date) => Date,
   getIntervalEnd: (date: Date) => Date
 ): LearningInterval[] {
-  // TODO: this should also include NOT YET mastered skills in progress
   const allSkills = currentLanguage.skills.concat(currentLanguage.bonus_skills);
   const masteredSkills = allSkills.filter(s => s.mastered);
 
   masteredSkills.forEach(s => {
-    s.learnedDate = dateParse(s.learned_ts * 1000);
+    if (s.learned_ts) {
+      s.learnedDate = dateParse(s.learned_ts * 1000);
+    }
   });
 
   const startDate = masteredSkills.reduce((earliestDate, skill) => {
-    return dateMin(earliestDate, skill.learnedDate);
+    return skill.learnedDate ? dateMin(earliestDate, skill.learnedDate) : earliestDate;
   }, new Date());
+
+  masteredSkills.forEach(s => {
+    if (!s.learnedDate) {
+      s.learnedDate = startDate;
+    }
+  });
 
   const emptyIntervalData = initIntervalData(
     startDate,
